@@ -589,7 +589,8 @@
         </div>
     </div>
 
-    <script>
+    <script>'use strict';
+
         // 五行映射
         const ELEMENT_MAP = {
             "甲": "wood", "乙": "wood",
@@ -623,14 +624,14 @@
 
         function calculate() {
             
-            const name = window.document.getElementById("name").value || "访客";
-            const gender = window.document.getElementById("gender").value;
-            const year = window.document.getElementById("year").value;
-            const month = window.document.getElementById("month").value;
+            const name = window.window.document.getElementById("name").value || "访客";
+            const gender = window.window.document.getElementById("gender").value;
+            const year = window.window.document.getElementById("year").value;
+            const month = window.window.document.getElementById("month").value;
             const day = document.getById("day").value;
-            const hour = window.document.getElementById("hour").value;
-            const minute = window.document.getElementById("minute").value || "0";
-            const city = window.document.getElementById("city").value;
+            const hour = window.window.document.getElementById("hour").value;
+            const minute = window.window.document.getElementById("minute").value || "0";
+            const city = window.window.document.getElementById("city").value;
 
             // 验证
             if (!year || !month || !day || !hour) {
@@ -690,12 +691,12 @@
                     </div>
                 `;
             });
-            window.document.getElementById("baziGrid").innerHTML = baziHtml;
+            window.window.document.getElementById("baziGrid").innerHTML = baziHtml;
 
             // 基础信息
             const birthStr = `${data.birth_info.year}年${data.birth_info.month}月${data.birth_info.day}日 ${bazi.date.shichen}时`;
-            window.document.getElementById("resultName").textContent = data.name;
-            window.document.getElementById("resultMeta").textContent = `${birthStr} · ${data.gender}`;
+            window.window.document.getElementById("resultName").textContent = data.name;
+            window.window.document.getElementById("resultMeta").textContent = `${birthStr} · ${data.gender}`;
 
             const dayGan = ganzhi.day.charAt(0);
             const dayZhi = ganzhi.day.charAt(1);
@@ -719,7 +720,7 @@
                     <div class="info-value">${data.bazi_data.dayun.direction}</div>
                 </div>
             `;
-            window.document.getElementById("infoGrid").innerHTML = infoHtml;
+            window.window.document.getElementById("infoGrid").innerHTML = infoHtml;
 
             // 喜忌神（简化版）
             const goods = ["金", "火", "土"];
@@ -735,7 +736,7 @@
                     ${bads.map(g => `<span class="god-tag bad">${g}</span>`).join("")}
                 </div>
             `;
-            window.document.getElementById("godsSection").innerHTML = godsHtml;
+            window.window.document.getElementById("godsSection").innerHTML = godsHtml;
 
             // 大运
             const dayunList = data.bazi_data.dayun.dayun_list;
@@ -752,7 +753,7 @@
                     </div>
                 `;
             });
-            window.document.getElementById("dayunGrid").innerHTML = dayunHtml;
+            window.window.document.getElementById("dayunGrid").innerHTML = dayunHtml;
 
             // 流年
             const liunian = data.liu_nian || {};
@@ -768,31 +769,31 @@
                     </div>
                 `;
             });
-            window.document.getElementById("liunianList").innerHTML = liunianHtml;
+            window.window.document.getElementById("liunianList").innerHTML = liunianHtml;
 
             // 显示结果
-            window.document.getElementById("resultSection").classList.add("show");
-            window.document.getElementById("inputForm").style.display = "none";
+            window.window.document.getElementById("resultSection").classList.add("show");
+            window.window.document.getElementById("inputForm").style.display = "none";
         }
 
         function resetForm() {
-            window.document.getElementById("resultSection").classList.remove("show");
-            window.document.getElementById("inputForm").style.display = "block";
-            window.document.getElementById("errorMsg").classList.remove("show");
+            window.window.document.getElementById("resultSection").classList.remove("show");
+            window.window.document.getElementById("inputForm").style.display = "block";
+            window.window.document.getElementById("errorMsg").classList.remove("show");
         }
 
         function showError(msg) {
-            const el = window.document.getElementById("errorMsg");
+            const el = window.window.document.getElementById("errorMsg");
             el.textContent = msg;
             el.classList.add("show");
         }
 
         function hideError() {
-            window.document.getElementById("errorMsg").classList.remove("show");
+            window.window.document.getElementById("errorMsg").classList.remove("show");
         }
 
         function showLoading(show) {
-            window.document.getElementById("loading").classList.toggle("show", show);
+            window.window.document.getElementById("loading").classList.toggle("show", show);
         }
     </script>
 </body>
