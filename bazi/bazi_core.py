@@ -442,9 +442,7 @@ def calculate_dayun(birth_dt_utc: datetime, tz_name: str, gender: str, year_gz: 
             "start_age_xu": 1,
             "end_age_xu": xu_start_age - 1,
             "age_range_xu": f"虚岁{1}-虚岁{xu_start_age - 1}",
-            "year_range": f"{birth_year}-{base_start_year - 1}",
-            "liu_nian": liu
-        })
+            "year_range": f"{birth_year}-{base_start_year - 1}",        })
     for i in range(10):
         idx = (month_idx60 + i + 1) % 60 if shun_pai else (month_idx60 - i - 1) % 60
         gz = HEAVENLY_STEMS[idx % 10] + EARTHLY_BRANCHES[idx % 12]
@@ -454,7 +452,10 @@ def calculate_dayun(birth_dt_utc: datetime, tz_name: str, gender: str, year_gz: 
         ey = base_start_year + (i + 1) * 10
         # compute liu nian for this 10-year period
         liu = []
+        # Only compute liu nian for years within reasonable range (speeds up response)
         for yy in range(sy, ey):
+            if abs(yy - birth_year) > 60:  # only compute within ±60 years of birth
+                continue
             d_local = tz.localize(datetime(yy, 6, 1, 12, 0))
             d_tst = true_solar_time(d_local, lon)
             gz_y = gan_zhi_year_from_lichun_local(d_tst, tz_name, lon)
@@ -471,9 +472,7 @@ def calculate_dayun(birth_dt_utc: datetime, tz_name: str, gender: str, year_gz: 
             "start_age_xu": xu_start_age + i * 10,
             "end_age_xu": xu_start_age + (i + 1) * 10,
             "age_range_xu": f"虚岁{xu_start_age + i * 10}-虚岁{xu_start_age + (i + 1) * 10}",
-            "year_range": f"{sy}-{ey}",
-            "liu_nian": liu
-        })
+            "year_range": f"{sy}-{ey}",        })
     return {
         "start_age_years": y,
         "start_age_months": m,
