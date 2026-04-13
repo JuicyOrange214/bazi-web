@@ -499,11 +499,12 @@
                     <input type="number" id="day" placeholder="1-31" min="1" max="31">
                 </div>
                 <div class="form-group">
-                    <label>出生时辰</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="number" id="hour" placeholder="0-23" min="0" max="23" style="width: 80px;">
-                        <input type="number" id="minute" placeholder="0-59" min="0" max="59" style="width: 80px;">
-                    </div>
+                    <label>出生时辰（小时）</label>
+                    <input type="number" id="hour" placeholder="0-23" min="0" max="23">
+                </div>
+                <div class="form-group">
+                    <label>分钟</label>
+                    <input type="number" id="minute" placeholder="0-59" min="0" max="59" style="width: 80px;">
                 </div>
                 <div class="form-group">
                     <label>出生城市</label>
@@ -589,8 +590,7 @@
         </div>
     </div>
 
-    <script>'use strict';
-
+    <script>
         // 五行映射
         const ELEMENT_MAP = {
             "甲": "wood", "乙": "wood",
@@ -623,15 +623,15 @@
         }
 
         function calculate() {
-            
-            const name = window.window.document.getElementById("name").value || "访客";
-            const gender = window.window.document.getElementById("gender").value;
-            const year = window.window.document.getElementById("year").value;
-            const month = window.window.document.getElementById("month").value;
-            const day = document.getById("day").value;
-            const hour = window.window.document.getElementById("hour").value;
-            const minute = window.window.document.getElementById("minute").value || "0";
-            const city = window.window.document.getElementById("city").value;
+            var doc = document;
+            var name = doc.getElementById("name").value || "访客";
+            var gender = doc.getElementById("gender").value;
+            var year = doc.getElementById("year").value;
+            var month = doc.getElementById("month").value;
+            var day = doc.getElementById("day").value;
+            var hour = doc.getElementById("hour").value;
+            var minute = doc.getElementById("minute").value || "0";
+            var city = doc.getElementById("city").value;
 
             // 验证
             if (!year || !month || !day || !hour) {
@@ -691,12 +691,12 @@
                     </div>
                 `;
             });
-            window.window.document.getElementById("baziGrid").innerHTML = baziHtml;
+            document.getElementById("baziGrid").innerHTML = baziHtml;
 
             // 基础信息
             const birthStr = `${data.birth_info.year}年${data.birth_info.month}月${data.birth_info.day}日 ${bazi.date.shichen}时`;
-            window.window.document.getElementById("resultName").textContent = data.name;
-            window.window.document.getElementById("resultMeta").textContent = `${birthStr} · ${data.gender}`;
+            document.getElementById("resultName").textContent = data.name;
+            document.getElementById("resultMeta").textContent = `${birthStr} · ${data.gender}`;
 
             const dayGan = ganzhi.day.charAt(0);
             const dayZhi = ganzhi.day.charAt(1);
@@ -720,7 +720,7 @@
                     <div class="info-value">${data.bazi_data.dayun.direction}</div>
                 </div>
             `;
-            window.window.document.getElementById("infoGrid").innerHTML = infoHtml;
+            document.getElementById("infoGrid").innerHTML = infoHtml;
 
             // 喜忌神（简化版）
             const goods = ["金", "火", "土"];
@@ -736,7 +736,7 @@
                     ${bads.map(g => `<span class="god-tag bad">${g}</span>`).join("")}
                 </div>
             `;
-            window.window.document.getElementById("godsSection").innerHTML = godsHtml;
+            document.getElementById("godsSection").innerHTML = godsHtml;
 
             // 大运
             const dayunList = data.bazi_data.dayun.dayun_list;
@@ -753,7 +753,7 @@
                     </div>
                 `;
             });
-            window.window.document.getElementById("dayunGrid").innerHTML = dayunHtml;
+            document.getElementById("dayunGrid").innerHTML = dayunHtml;
 
             // 流年
             const liunian = data.liu_nian || {};
@@ -769,31 +769,31 @@
                     </div>
                 `;
             });
-            window.window.document.getElementById("liunianList").innerHTML = liunianHtml;
+            document.getElementById("liunianList").innerHTML = liunianHtml;
 
             // 显示结果
-            window.window.document.getElementById("resultSection").classList.add("show");
-            window.window.document.getElementById("inputForm").style.display = "none";
+            document.getElementById("resultSection").classList.add("show");
+            document.getElementById("inputForm").style.display = "none";
         }
 
         function resetForm() {
-            window.window.document.getElementById("resultSection").classList.remove("show");
-            window.window.document.getElementById("inputForm").style.display = "block";
-            window.window.document.getElementById("errorMsg").classList.remove("show");
+            document.getElementById("resultSection").classList.remove("show");
+            document.getElementById("inputForm").style.display = "block";
+            document.getElementById("errorMsg").classList.remove("show");
         }
 
         function showError(msg) {
-            const el = window.window.document.getElementById("errorMsg");
+            const el = document.getElementById("errorMsg");
             el.textContent = msg;
             el.classList.add("show");
         }
 
         function hideError() {
-            window.window.document.getElementById("errorMsg").classList.remove("show");
+            document.getElementById("errorMsg").classList.remove("show");
         }
 
         function showLoading(show) {
-            window.window.document.getElementById("loading").classList.toggle("show", show);
+            document.getElementById("loading").classList.toggle("show", show);
         }
     </script>
 </body>
