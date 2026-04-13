@@ -622,6 +622,7 @@
         }
 
         function calculate() {
+            console.log('calculate called, document:', typeof document, 'getElementById:', typeof document.getElementById);
             const name = document.getElementById("name").value || "访客";
             const gender = document.getElementById("gender").value;
             const year = document.getElementById("year").value;
