@@ -1242,25 +1242,36 @@
                 document.getElementById("healthSection").innerHTML = '<div class="analysis-text">健康状态平稳，注意保持良好生活习惯。</div>';
             }
 
-            // 大运时间线（带文字解读）
+            // 大运时间线（带文字解读）- 只显示近20年的大运
             var dayunList = data.bazi_data.dayun.dayun_list;
             var dayunInterps = (analysis.dayun_interpretations || []).reduce(function(acc, item) {
                 acc[item.ganzhi] = item; return acc;
             }, {});
             var nowYear = new Date().getFullYear();
+            // Filter: only show dayuns within ±10 years of current year
+            var nearbyDayuns = dayunList.filter(function(d) {
+                if (d.gan_zhi === "小运") return false;
+                var yrRange = d.year_range || "";
+                var parts = yrRange.split("-");
+                if (parts.length < 2) return false;
+                var startYr = parseInt(parts[0]);
+                var endYr = parseInt(parts[1]);
+                return endYr >= nowYear - 10 && startYr <= nowYear + 10;
+            });
             var timelineHtml = "";
-            dayunList.forEach(function(d, idx) {
-                if (d.gan_zhi === "小运") return;
+            nearbyDayuns.forEach(function(d, idx) {
                 var gz = d.gan_zhi;
                 var gan = gz.charAt(0);
                 var gzWX = WL[getWuXing(gan)];
-                var isSmall = gz === "小运";
-                var isCurrent = !isSmall && d.year_range && d.year_range.indexOf(String(nowYear)) >= 0;
-                var hasLine = idx < dayunList.length - 1;
+                var isCurrent = d.year_range && d.year_range.indexOf(String(nowYear)) >= 0;
+                var hasLine = idx < nearbyDayuns.length - 1;
                 var interp = dayunInterps[gz] || {};
                 var desc = interp.description || "";
-                timelineHtml += '<div class="dayun-card"><div class="dayun-age-col"><div class="dayun-age-label">' + d.age_range + '</div><div class="dayun-age-value">' + d.age_range_xu + '</div></div><div class="dayun-line-col"><div class="dayun-dot"></div>' + (hasLine ? '<div class="dayun-line"></div>' : '') + '</div><div class="dayun-content-col' + (isCurrent ? ' dayun-current' : '') + '"><div class="dayun-gz">' + gan + ' ' + d.gan_zhi.charAt(1) + '</div><div class="dayun-wuxing">' + gzWX + ' · ' + (isSmall ? '小运' : '大运') + '</div><div class="dayun-range">' + d.year_range + '</div>' + (desc ? '<div class="dayun-desc">' + desc + '</div>' : '') + '</div></div>';
+                timelineHtml += '<div class="dayun-card"><div class="dayun-age-col"><div class="dayun-age-label">' + d.age_range + '</div><div class="dayun-age-value">' + d.age_range_xu + '</div></div><div class="dayun-line-col"><div class="dayun-dot"></div>' + (hasLine ? '<div class="dayun-line"></div>' : '') + '</div><div class="dayun-content-col' + (isCurrent ? ' dayun-current' : '') + '"><div class="dayun-gz">' + gan + ' ' + d.gan_zhi.charAt(1) + '</div><div class="dayun-wuxing">' + gzWX + ' · 大运</div><div class="dayun-range">' + d.year_range + '</div>' + (desc ? '<div class="dayun-desc">' + desc + '</div>' : '') + '</div></div>';
             });
+            if (nearbyDayuns.length === 0) {
+                timelineHtml = '<div style="text-align:center;color:var(--text-muted);padding:20px;">大运数据加载中...</div>';
+            }
             document.getElementById("dayunTimeline").innerHTML = timelineHtml;
 
             // 流年（近5年）
