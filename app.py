@@ -15,7 +15,7 @@ BAZI_SCRIPTS_PATH = os.path.join(os.path.dirname(__file__), "bazi")
 sys.path.insert(0, BAZI_SCRIPTS_PATH)
 
 from bazi_calculator import compute_bazi_and_dayun
-from bazi_analysis import analyze_bazi
+from bazi_analysis import analyze_bazi_full
 
 
 @app.route("/")
@@ -59,7 +59,7 @@ def calculate_bazi():
         # 生成文字解读
         ganzhi = result.get("lunar", {}).get("gan_zhi", {})
         dayun_list = result.get("dayun", {}).get("dayun_list", [])
-        analysis = analyze_bazi(ganzhi, dayun_list, gender, int(year))
+        analysis = analyze_bazi_full(ganzhi, dayun_list, gender, int(year))
 
         return jsonify({
             "success": True,

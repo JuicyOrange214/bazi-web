@@ -418,3 +418,431 @@ def _character_description(day_gan, wx_count, strength):
 
     base = descriptions.get(most_wx, "你性格平衡，五行较为齐全。")
     return base
+
+
+# ===================== 详细性格分析 =====================
+
+def detailed_character_analysis(ganzhi_dict, wuxing_count, strength_level, day_gan, ten_gods_map):
+    """生成详细的性格分析"""
+    from datetime import datetime
+    
+    day_zhi = ganzhi_dict["day"][1]
+    month_gan = ganzhi_dict["month"][0]
+    month_zhi = ganzhi_dict["month"][1]
+    year_gan = ganzhi_dict["year"][0]
+    hour_gan = ganzhi_dict["hour"][0]
+    hour_zhi = ganzhi_dict["hour"][1]
+    
+    wx = GAN_WUXING[day_gan]
+    day_yy = GAN_YINYANG[day_gan]
+    
+    results = {}
+    
+    # 1. 基础性格概述
+    results["overview"] = _get_wuxing_overview(wx, day_yy, wuxing_count)
+    
+    # 2. 各柱性格影响
+    results["pillar_influence"] = {
+        "year": _get_year_pillar_effect(year_gan, ganzhi_dict["year"][1]),
+        "month": _get_month_pillar_effect(month_gan, month_zhi),
+        "day": _get_day_pillar_effect(day_gan, day_zhi),
+        "hour": _get_hour_pillar_effect(hour_gan, hour_zhi),
+    }
+    
+    # 3. 十神特质
+    results["ten_god_traits"] = _get_ten_god_detailed_traits(ten_gods_map, day_gan)
+    
+    # 4. 性格优劣势
+    results["strengths_weaknesses"] = _get_strengths_weaknesses(wx, ten_gods_map, wuxing_count)
+    
+    # 5. 人际关系模式
+    results["relationships"] = _get_relationship_patterns(ten_gods_map, wx, day_yy)
+    
+    # 6. 事业发展建议
+    results["career"] = _get_career_tendencies(ten_gods_map, wx, month_zhi)
+    
+    return results
+
+
+def _get_wuxing_overview(wx, day_yy, wx_count):
+    """五行基础性格概述"""
+    overviews = {
+        "木": {
+            "overview": "你是一个内心有力量的人，对自己想要的事物有清晰的追求。你的想法往往比感受走得更快，有时候需要学着放慢脚步，倾听身体的声音。",
+            "emotional": "情感细腻但不太外露，有时候会把情绪积压在心里。遇到压力时容易焦虑或纠结，但也有韧性能够坚持。",
+            "social": "对人友善但有选择，不喜欢虚伪的社交。朋友不多但交心，容易被理解自己的人吸引。",
+        },
+        "火": {
+            "overview": "你是一个热情直接的人，对生活充满动力和好奇心。你的感染力很强，能够带动周围人的情绪。",
+            "emotional": "情绪来得快去得也快，很少真正记仇。感受力很强，但也容易因为小事受伤。",
+            "social": "朋友很多，擅长社交，容易在人群中找到自己的位置。但有时候需要学会独处。",
+        },
+        "土": {
+            "overview": "你是一个稳重踏实的人，重视承诺和责任。你有耐心，愿意为长远目标持续努力。",
+            "emotional": "情绪稳定，不容易大喜大悲。但有时候会压抑情绪，不善于表达内心的感受。",
+            "social": "朋友关系稳定持久，不追求数量而是质量。是一个值得信赖的伙伴。",
+        },
+        "金": {
+            "overview": "你是一个有原则有底线的人，对公平正义看得很重。你的决定通常干脆利落，不拖泥带水。",
+            "emotional": "感受力很强但不太外露，有时候显得冷硬。内心其实很敏感，只是不会轻易展示。",
+            "social": "朋友不多但都是精品，宁缺毋滥。对人际关系有清晰的标准。",
+        },
+        "水": {
+            "overview": "你是一个聪明善变的人，思维活跃，适应力强。你的直觉很准，能够快速捕捉到环境的变化。",
+            "emotional": "情绪起伏较大，容易受环境影响。但也有很强的自我调节能力。",
+            "social": "朋友遍天下但真正懂你的少。需要找到能够深度交流的人。",
+        },
+    }
+    base = overviews.get(wx, overviews["土"])
+    lack = [k for k, v in wx_count.items() if v == 0]
+    if lack:
+        base["overview"] += f" 另外，你的八字缺{lack[0]}，可能在某些方面需要多加留意。"
+    return base
+
+
+def _get_year_pillar_effect(year_gan, year_zhi):
+    """年柱对性格的影响（祖辈/早年）"""
+    wx = GAN_WUXING[year_gan]
+    yy = GAN_YINYANG[year_gan]
+    effects = {
+        "木": "早年得到长辈的关爱，有一定的靠山，但也要学会独立。",
+        "火": "早年生活环境较温暖，长辈有爱心，帮助你形成积极的心态。",
+        "土": "早年生活稳定，得到家族的支持和信任。",
+        "金": "早年可能经历过一些磨练，但让你更加坚强有主见。",
+        "水": "早年生活可能有变迁，锻炼了你的适应能力。",
+    }
+    return effects.get(wx, "早年生活平稳。")
+
+
+def _get_month_pillar_effect(month_gan, month_zhi):
+    """月柱对性格的影响（父母/青年时期）"""
+    wx = GAN_WUXING[month_gan]
+    effects = {
+        "木": "月柱木旺，代表你有进取心，有明确的目标和追求。",
+        "火": "月柱火旺，你行动力强，善于把握机会。",
+        "土": "月柱土旺，你务实可靠，善于积累和规划。",
+        "金": "月柱金旺，你有原则有魄力，做事干脆。",
+        "水": "月柱水旺，你聪明灵活，善于变通和思考。",
+    }
+    return effects.get(wx, "")
+
+
+def _get_day_pillar_effect(day_gan, day_zhi):
+    """日柱对性格的影响（自身）"""
+    wx = GAN_WUXING[day_gan]
+    yy = GAN_YINYANG[day_gan]
+    base = GAN_WUXING[day_gan]
+    
+    day_effects = {
+        "木": "你是乙木日主，外柔内刚，有韧性、有主见，不轻易服输。",
+        "火": "你是丙火日主，热情开朗，善于表达，有感染力。",
+        "土": "你是戊土日主，稳重踏实，重视承诺，有责任心。",
+        "金": "你是庚金日主，果断坚定，有原则有魄力。",
+        "水": "你是壬水日主，聪明智慧，适应力强，善于谋略。",
+    }
+    return day_effects.get(base, "")
+
+
+def _get_hour_pillar_effect(hour_gan, hour_zhi):
+    """时柱对性格的影响（晚年/子女）"""
+    wx = GAN_WUXING[hour_gan]
+    effects = {
+        "木": "晚年心态更加平和，与子女关系和谐。",
+        "火": "晚年生活依然丰富，保持学习的心态。",
+        "土": "晚年财运稳定，家庭和睦。",
+        "金": "晚年依然有活力，子女有成就。",
+        "水": "晚年有智慧传承，与年轻一代沟通顺畅。",
+    }
+    return effects.get(wx, "")
+
+
+def _get_ten_god_detailed_traits(ten_gods_map, day_gan):
+    """十神特质详解"""
+    traits = {}
+    
+    ten_god_natures = {
+        "比肩": {
+            "positive": "独立自主、有主见、意志坚强、能够坚持自我",
+            "negative": "固执己见、缺乏团队精神、不善于求助",
+            "relationship": "在感情中需要平等的伙伴关系，不喜欢被控制",
+            "career": "适合独立创业或自由职业",
+        },
+        "劫财": {
+            "positive": "豪爽义气、善于交际、敢于冒险、有竞争力",
+            "negative": "冲动消费、容易与人发生争执、竞争意识过强",
+            "relationship": "在感情中需要保持独立性，同时学会妥协",
+            "career": "适合销售、商务、公关等需要人际交往的工作",
+        },
+        "食神": {
+            "positive": "温和善良、表达力强、懂得享受生活、有创造力",
+            "negative": "容易满足现状、缺乏上进心、有时过于理想化",
+            "relationship": "温柔体贴的伴侣，能够让对方感到舒适",
+            "career": "适合教育、艺术、餐饮、设计等需要创意和表达的工作",
+        },
+        "伤官": {
+            "positive": "聪明机敏、创意十足、口才好、思维活跃",
+            "negative": "容易骄傲、不服管教、说话直接容易伤人",
+            "relationship": "需要能够欣赏你才华的伴侣，不喜欢平淡的生活",
+            "career": "适合创意行业、写作、法律、表演等",
+        },
+        "偏财": {
+            "positive": "善于理财、社交能力强、眼光独到、懂得享受",
+            "negative": "花钱大方导致财运不稳、有时过于计较利益",
+            "relationship": "在感情中浪漫但有时不够专注",
+            "career": "适合金融、投资、商务、销售等与金钱打交道的工作",
+        },
+        "正财": {
+            "positive": "务实节约、理财稳健、工作认真、财运稳定",
+            "negative": "赚钱欲望不够强烈、过于保守、缺乏冒险精神",
+            "relationship": "在感情中忠诚可靠，是稳定的依靠",
+            "career": "适合财务、会计、公务员、后勤管理等稳定的工作",
+        },
+        "偏官": {
+            "positive": "果断有魄力、压力下成长快、善于竞争、敢于挑战",
+            "negative": "脾气急躁、压力过大、容易得罪人",
+            "relationship": "在感情中需要有空间和自由，不喜欢束缚",
+            "career": "适合管理、司法、执法、外科医生等高压工作",
+        },
+        "正官": {
+            "positive": "有责任心、守规矩、善于规划、名声观念强",
+            "negative": "过于在意他人看法、缺乏灵活性、容易有压力",
+            "relationship": "在感情中认真负责，追求稳定长久的关系",
+            "career": "适合管理、公务员、教师、HR等需要责任感和规划性的工作",
+        },
+        "偏印": {
+            "positive": "悟性高、领悟力强、有独特见解、善于钻研",
+            "negative": "性格孤僻、缺乏热情、不善于表达情感",
+            "relationship": "在感情中比较内敛，需要能够读懂你的伴侣",
+            "career": "适合学术研究、技术、研发、咨询等需要深度思考的工作",
+        },
+        "正印": {
+            "positive": "仁慈善良、有爱心、善于学习、有包容心",
+            "negative": "有时候过于理想化、缺乏主见、容易依赖他人",
+            "relationship": "在感情中给予对方无条件的支持和关爱",
+            "career": "适合教育、医疗、公益、写作等需要爱心和耐心的行业",
+        },
+    }
+    
+    for pillar, god in ten_gods_map.items():
+        if god in ten_god_natures:
+            traits[pillar] = ten_god_natures[god]
+        else:
+            traits[pillar] = {"positive": "性格平衡", "negative": "", "relationship": "", "career": ""}
+    
+    return traits
+
+
+def _get_strengths_weaknesses(wx, ten_gods_map, wx_count):
+    """性格优劣势分析"""
+    strengths_map = {
+        "木": ["有主见有韧性", "思维活跃善于思考", "目标明确不易动摇"],
+        "火": ["热情开朗有感染力", "行动力强效率高", "善于带动氛围"],
+        "土": ["稳重踏实负责任", "有耐心能坚持", "重视承诺可靠"],
+        "金": ["果断有原则", "决策力强", "有魄力能担当"],
+        "水": ["聪明善变适应力强", "直觉准善于把握机会", "想法多创意足"],
+    }
+    
+    weaknesses_map = {
+        "木": ["有时候过于固执", "容易犹豫不决", "内耗较多想太多"],
+        "火": ["容易急躁三分钟热度", "情绪波动大", "有时候过于直接"],
+        "土": ["过于保守谨慎", "不善变通", "容易压抑情绪"],
+        "金": ["有时候过于冷硬", "不太善于表达情感", "原则性过强"],
+        "水": ["容易犹豫不决", "情绪起伏大", "有时候想法太多难执行"],
+    }
+    
+    return {
+        "strengths": strengths_map.get(wx, ["性格平衡"]),
+        "weaknesses": weaknesses_map.get(wx, ["有待完善"]),
+    }
+
+
+def _get_relationship_patterns(ten_gods_map, wx, day_yy):
+    """人际关系模式"""
+    day_god = ten_gods_map.get("day", "")
+    
+    patterns = {
+        "比肩": "你倾向于建立平等互助的关系，不喜欢欠人情。在朋友圈中通常是组织者或核心人物。",
+        "劫财": "你社交能力强，人脉广泛，但有时候会与人竞争或发生冲突。需要学会处理人际冲突。",
+        "食神": "你人缘好，相处起来让人感到舒适。但有时候过于随和，缺乏主见。",
+        "伤官": "你说话直接，有时候会无意间得罪人。但真正了解你的人会欣赏你的坦诚。",
+        "偏财": "你善于结交各路朋友，社交手腕灵活。但财运和感情运容易有波动。",
+        "正财": "你对待感情认真负责，是可靠的伴侣和朋友。但有时候表达情感不够浪漫。",
+        "偏官": "你在人际关系中容易有压力感，需要学会放松和信任他人。",
+        "正官": "你遵守规则，重信誉，在社交中受人尊重。但有时候过于在意他人看法。",
+        "偏印": "你比较独立，不太依赖他人。人际圈子可能不大，但朋友都很交心。",
+        "正印": "你待人温和有爱心，是很好的倾听者。人际关系和谐，很少与人发生冲突。",
+    }
+    
+    base = patterns.get(day_god, "你性格平衡，人际关系较为和谐。")
+    return {"pattern": base}
+
+
+def _get_career_tendencies(ten_gods_map, wx, month_zhi):
+    """事业发展倾向"""
+    day_god = ten_gods_map.get("day", "")
+    month_god = ten_gods_map.get("month", "")
+    
+    career_map = {
+        "比肩": "适合独立创业、自由职业、专业技术类工作。",
+        "劫财": "适合销售、商务、公关、业务拓展类工作。",
+        "食神": "适合教育、艺术设计、餐饮、创意类工作。",
+        "伤官": "适合写作、法律、表演、创意行业、管理类工作。",
+        "偏财": "适合金融、投资、贸易、销售类与金钱打交道的工作。",
+        "正财": "适合财务、会计、后勤、公务员等稳定的工作。",
+        "偏官": "适合管理、司法、执法、军事、外科医生等高压工作。",
+        "正官": "适合管理、公务员、教师、HR等需要责任感和规划性的工作。",
+        "偏印": "适合学术研究、技术研发、咨询等需要深度思考的工作。",
+        "正印": "适合教育、医疗、公益、写作等需要爱心和耐心的行业。",
+    }
+    
+    base = career_map.get(day_god, career_map.get(month_god, "职业倾向需要结合具体八字分析。"))
+    
+    # 结合月令做补充
+    month_career = {
+        "寅": "你执行力强，适合需要动手能力的工作。",
+        "卯": "你思维活跃，适合需要创意的工作。",
+        "巳": "你善于沟通，适合需要表达的工作。",
+        "午": "你热情有活力，适合需要影响他人的工作。",
+        "申": "你分析能力强，适合需要逻辑思维的工作。",
+        "酉": "你注重细节，适合需要精确度的工作。",
+        "亥": "你直觉敏锐，适合需要洞察力的工作。",
+        "子": "你适应力强，适合需要灵活应变的工作。",
+    }
+    
+    extra = month_career.get(month_zhi, "")
+    return {"tendency": base + " " + extra}
+
+
+# 更新 analyze_bazi 使用新的详细性格分析
+def analyze_bazi_full(ganzhi_dict, dayun_list, gender, birth_year):
+    """生成完整的八字解读（包含详细性格分析）"""
+    from datetime import datetime
+
+    day_gan = ganzhi_dict["day"][0]
+    month_zhi = ganzhi_dict["month"][1]
+    day_zhi = ganzhi_dict["day"][1]
+    hour_gan = ganzhi_dict["hour"][0]
+    hour_zhi = ganzhi_dict["hour"][1]
+
+    # 五行统计
+    wx_count = get_wuxing_count(ganzhi_dict)
+
+    # 八字强弱
+    strength_str, score = determine_strength(day_gan, month_zhi, wx_count)
+
+    # 用神喜忌
+    use_gods, avoid_gods = determine_gods_and_harm(day_gan, wx_count, strength_str)
+
+    # 十神map
+    ten_gods_map = {
+        "year": TEN_GODS.get(day_gan, {}).get(ganzhi_dict["year"][0], "其他"),
+        "month": TEN_GODS.get(day_gan, {}).get(ganzhi_dict["month"][0], "其他"),
+        "day": TEN_GODS.get(day_gan, {}).get(day_gan, "其他"),
+        "hour": TEN_GODS.get(day_gan, {}).get(hour_gan, "其他"),
+    }
+
+    # 当前年份
+    current_year = datetime.now().year
+
+    # 找当前大运
+    current_dayun = None
+    for du in dayun_list:
+        if du.get("gan_zhi") == "小运":
+            continue
+        yr_range = du.get("year_range", "")
+        if str(current_year) in yr_range:
+            current_dayun = du
+            break
+
+    # 大运解读
+    dayun_interpretations = []
+    for du in dayun_list:
+        if du.get("gan_zhi") == "小运":
+            continue
+        is_current = current_dayun and du.get("gan_zhi") == current_dayun.get("gan_zhi")
+        interp = get_dayun_interpretation(
+            du["gan_zhi"][0], du["gan_zhi"][1],
+            is_current, day_gan, use_gods, avoid_gods, du.get("age_range", "")
+        )
+        dayun_interpretations.append(interp)
+
+    # 五行缺什么
+    lack = [wx for wx, cnt in wx_count.items() if cnt == 0]
+
+    # 综述
+    lack_str = f"五行缺{'、'.join(lack)}。" if lack else "五行齐全。"
+    
+    # 基础综述
+    summary_parts = [
+        f"日主{day_gan}（{GAN_WUXING[day_gan]}），{strength_str}。{lack_str}",
+    ]
+
+    # 详细性格分析
+    detailed_char = detailed_character_analysis(ganzhi_dict, wx_count, strength_str, day_gan, ten_gods_map)
+    
+    # 性格综述
+    overview = detailed_char["overview"]
+    char_summary = overview.get("overview", "") + " " + overview.get("emotional", "")
+
+    # 流年解读（近3年）
+    liunian_interps = []
+    for du in dayun_list:
+        for ln in du.get("liu_nian", []):
+            yr = ln.get("year", 0)
+            if abs(yr - current_year) <= 2:
+                ln_gan = ln["gan_zhi"][0]
+                ln_zhi = ln["gan_zhi"][1]
+                ln_wx = GAN_WUXING.get(ln_gan, "土")
+                ln_zhi_wx = ZHI_WUXING.get(ln_zhi, "土")
+
+                if ln_wx in use_gods or ln_zhi_wx in use_gods:
+                    ln_mood = "用神流年，运势较好"
+                elif ln_wx in avoid_gods or ln_zhi_wx in avoid_gods:
+                    ln_mood = "忌神流年，谨慎行事"
+                else:
+                    ln_mood = "平稳过渡"
+
+                liunian_interps.append({
+                    "year": str(yr),
+                    "ganzhi": ln["gan_zhi"],
+                    "age": f"{ln.get('age_xu', 0)}岁",
+                    "description": f"{ln['gan_zhi'][0]}{ln['gan_zhi'][1]}年，{ln_mood}。"
+                })
+
+    return {
+        "summary": "".join(summary_parts),
+        "summary_full": char_summary,
+        "strength": {
+            "level": strength_str,
+            "score": score,
+            "description": _strength_description(strength_str, day_gan, wx_count),
+        },
+        "wuxing": {
+            "counts": wx_count,
+            "lacking": lack,
+        },
+        "gods": {
+            "use": use_gods,
+            "avoid": avoid_gods,
+            "use_description": _gods_description(use_gods, avoid_gods, strength_str),
+        },
+        "character": {
+            "day_master": f"{day_gan}{GAN_WUXING[day_gan]}（{GAN_YINYANG[day_gan]}）",
+            "ten_gods": {
+                "year": ten_gods_map["year"],
+                "month": ten_gods_map["month"],
+                "day": ten_gods_map["day"],
+                "hour": ten_gods_map["hour"],
+            },
+            "nature_description": overview.get("overview", ""),
+            "emotional": overview.get("emotional", ""),
+            "social": overview.get("social", ""),
+            "ten_god_traits": detailed_char.get("ten_god_traits", {}),
+            "strengths_weaknesses": detailed_char.get("strengths_weaknesses", {}),
+            "relationships": detailed_char.get("relationships", {}),
+            "career": detailed_char.get("career", {}),
+            "pillar_influence": detailed_char.get("pillar_influence", {}),
+        },
+        "dayun_interpretations": dayun_interpretations,
+        "liunian_interpretations": liunian_interps[:6],
+    }
