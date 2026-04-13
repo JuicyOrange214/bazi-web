@@ -933,7 +933,7 @@
             document.getElementById("godsSection").innerHTML = godsHtml;
 
             // 节气
-            var jq = bazi.lunar.jieqi;
+            var jq = bazi.jieqi;
             document.getElementById("jieqiInfo").innerHTML = '<div class="jieqi-item"><div class="jieqi-label">上一个节气</div><div class="jieqi-value">' + jq.current_jieqi + '</div><div class="jieqi-time">' + jq.current_jieqi_time_local.split(" ")[0] + '</div></div><div class="jieqi-item"><div class="jieqi-label">下一个节气</div><div class="jieqi-value">' + jq.next_jieqi + '</div><div class="jieqi-time">' + jq.next_jieqi_time_local.split(" ")[0] + '</div></div>';
 
             // 大运时间线
