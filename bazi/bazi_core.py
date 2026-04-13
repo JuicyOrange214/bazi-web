@@ -452,6 +452,17 @@ def calculate_dayun(birth_dt_utc: datetime, tz_name: str, gender: str, year_gz: 
         ea = sa + 10
         sy = base_start_year + i * 10
         ey = base_start_year + (i + 1) * 10
+        # compute liu nian for this 10-year period
+        liu = []
+        for yy in range(sy, ey):
+            d_local = tz.localize(datetime(yy, 6, 1, 12, 0))
+            d_tst = true_solar_time(d_local, lon)
+            gz_y = gan_zhi_year_from_lichun_local(d_tst, tz_name, lon)
+            liu.append({
+                "year": yy,
+                "gan_zhi": gz_y,
+                "age_xu": (yy - birth_year) + 1
+            })
         dayun_list.append({
             "gan_zhi": gz,
             "start_age": sa,
@@ -460,7 +471,8 @@ def calculate_dayun(birth_dt_utc: datetime, tz_name: str, gender: str, year_gz: 
             "start_age_xu": xu_start_age + i * 10,
             "end_age_xu": xu_start_age + (i + 1) * 10,
             "age_range_xu": f"虚岁{xu_start_age + i * 10}-虚岁{xu_start_age + (i + 1) * 10}",
-            "year_range": f"{sy}-{ey}"
+            "year_range": f"{sy}-{ey}",
+            "liu_nian": liu
         })
     return {
         "start_age_years": y,
