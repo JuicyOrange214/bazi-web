@@ -752,6 +752,82 @@
             margin-top: 4px;
         }
 
+
+        .analysis-text {
+            font-size: 14px;
+            line-height: 2;
+            color: var(--text-secondary);
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        .ten-god-detail-card {
+            margin-bottom: 14px;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+        .ten-god-detail-card:last-child { margin-bottom: 0; }
+        .ten-god-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .ten-god-pillar-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: white;
+        }
+        .ten-god-name-badge {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .ten-god-def {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .ten-god-subtitle {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .ten-god-positive, .ten-god-negative {
+            font-size: 12px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        .ten-god-positive li, .ten-god-negative li {
+            margin-bottom: 2px;
+        }
+        .health-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .health-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .health-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .health-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
     </style>
 </head>
 <body>
@@ -887,34 +963,46 @@
                 <div class="analysis-summary" id="analysisSummary"></div>
             </div>
 
-            <!-- 性格分析 -->
+            <!-- 性格总述 -->
             <div class="result-card">
                 <div class="card-title">性格解读</div>
                 <div class="analysis-text" id="analysisCharacter"></div>
             </div>
 
-            <!-- 优劣势 -->
+            <!-- 各柱十神详解 -->
+            <div class="result-card">
+                <div class="card-title">四柱十神详解</div>
+                <div class="tengod-detail-section" id="tenGodDetailSection"></div>
+            </div>
+
+            <!-- 性格优劣势 -->
             <div class="result-card">
                 <div class="card-title">性格优劣势</div>
                 <div class="strength-weakness" id="strengthWeakness"></div>
             </div>
 
-            <!-- 十神解读 -->
+            <!-- 情感模式 -->
             <div class="result-card">
-                <div class="card-title">十神特质</div>
-                <div class="tengod-section" id="tenGodSection"></div>
+                <div class="card-title">情感模式</div>
+                <div class="analysis-text" id="emotionalSection"></div>
             </div>
 
-            <!-- 人际关系 -->
+            <!-- 社交人际 -->
             <div class="result-card">
-                <div class="card-title">人际关系</div>
-                <div class="analysis-text" id="relationshipSection"></div>
+                <div class="card-title">社交人际</div>
+                <div class="analysis-text" id="socialSection"></div>
             </div>
 
             <!-- 事业发展 -->
             <div class="result-card">
-                <div class="card-title">事业发展</div>
+                <div class="card-title">事业发展建议</div>
                 <div class="analysis-text" id="careerSection"></div>
+            </div>
+
+            <!-- 健康提醒 -->
+            <div class="result-card">
+                <div class="card-title">健康提醒</div>
+                <div class="health-section" id="healthSection"></div>
             </div>
 
             <!-- 大运 -->
@@ -1082,12 +1170,26 @@
             document.getElementById("analysisSummary").innerHTML = 
                 '<span class="strength-tag">' + (strength.level || "中和") + '</span>' + summary;
 
-            // 性格分析
+            // 性格总述
             var charText = analysis.character || {};
             var charDesc = charText.nature_description || "";
-            if (charText.emotional) charDesc += " " + charText.emotional;
-            if (charText.social) charDesc += " " + charText.social;
-            document.getElementById("analysisCharacter").innerHTML = charDesc || "性格平衡，五行较为齐全。";
+            document.getElementById("analysisCharacter").innerHTML = charDesc;
+
+            // 四柱十神详解
+            var tgDetails = charText.ten_god_details || {};
+            var tgMap = {year: "年柱", month: "月柱", day: "日柱", hour: "时柱"};
+            var tgNames = charText.ten_gods || {};
+            var tgHtml = '';
+            ["year", "month", "day", "hour"].forEach(function(p) {
+                var god = tgNames[p] || "其他";
+                var detail = tgDetails[p] || null;
+                var posList = detail && detail.positive ? detail.positive.join(' ') : '';
+                var negList = detail && detail.negative ? detail.negative.join(' ') : '';
+                var relText = detail && detail.relationship ? detail.relationship : '';
+                var defText = detail && detail.definition ? detail.definition : '';
+                tgHtml += '<div class="ten-god-detail-card"><div class="ten-god-detail-header"><span class="ten-god-pillar-badge">' + tgMap[p] + '</span><span class="ten-god-name-badge">' + god + '</span></div>' + (defText ? '<div class="ten-god-def">' + defText + '</div>' : '') + (posList ? '<div class="ten-god-subtitle">性格特点</div><div class="ten-god-positive">' + posList + '</div>' : '') + (negList ? '<div class="ten-god-subtitle" style="margin-top:8px">需要注意</div><div class="ten-god-negative">' + negList + '</div>' : '') + (relText ? '<div class="ten-god-subtitle" style="margin-top:8px">感情模式</div><div class="ten-god-positive">' + relText + '</div>' : '') + '</div>';
+            });
+            document.getElementById("tenGodDetailSection").innerHTML = tgHtml;
 
             // 优劣势
             var sw = charText.strengths_weaknesses || {};
@@ -1099,26 +1201,26 @@
                 weaknesses.map(function(w) { return '<span class="sw-tag">' + w + '</span>'; }).join('') + '</div></div>';
             document.getElementById("strengthWeakness").innerHTML = swHtml;
 
-            // 十神特质
-            var tgTraits = charText.ten_god_traits || {};
-            var tgMap = {year: "年", month: "月", day: "日", hour: "时"};
-            var tgHtml = '<div class="tengod-grid">';
-            ["year", "month", "day", "hour"].forEach(function(p) {
-                var god = charText.ten_gods && charText.ten_gods[p] ? charText.ten_gods[p] : "其他";
-                var trait = tgTraits[p] || {};
-                var posTrait = trait.positive || "";
-                tgHtml += '<div class="tengod-item"><div class="tengod-pillar">' + tgMap[p] + '柱</div><div class="tengod-name">' + god + '</div><div class="tengod-trait">' + (god !== "其他" ? posTrait.substring(0, 12) + "..." : "-") + '</div></div>';
-            });
-            tgHtml += '</div>';
-            document.getElementById("tenGodSection").innerHTML = tgHtml;
+            // 情感模式
+            var emotional = charText.emotional || "";
+            document.getElementById("emotionalSection").innerHTML = emotional || "情感模式平稳。";
 
-            // 人际关系
-            var rel = charText.relationships || {};
-            document.getElementById("relationshipSection").innerHTML = rel.pattern || "人际关系和谐。";
+            // 社交人际
+            var social = charText.social || "";
+            document.getElementById("socialSection").innerHTML = social || "人际关系和谐。";
 
             // 事业发展
-            var career = charText.career || {};
-            document.getElementById("careerSection").innerHTML = career.tendency || "职业发展平稳。";
+            var wuxingDetail = (analysis.wuxing || {}).detail || {};
+            var careerTendency = (charText.career || {}).tendency || wuxingDetail.career || "职业发展平稳。";
+            document.getElementById("careerSection").innerHTML = careerTendency;
+
+            // 健康提醒
+            var healthParts = wuxingDetail.health || [];
+            if (healthParts.length > 0) {
+                document.getElementById("healthSection").innerHTML = '<div class="health-grid"><div class="health-item"><div class="health-label">重点关注</div><div class="health-value">' + healthParts[0] + '</div></div><div class="health-item"><div class="health-label">次要注意</div><div class="health-value">' + (healthParts[1] || healthParts[0]) + '</div></div></div>';
+            } else {
+                document.getElementById("healthSection").innerHTML = '<div class="analysis-text">健康状态平稳，注意保持良好生活习惯。</div>';
+            }
 
             // 大运时间线（带文字解读）
             var dayunList = data.bazi_data.dayun.dayun_list;
