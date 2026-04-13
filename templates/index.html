@@ -499,8 +499,11 @@
                     <input type="number" id="day" placeholder="1-31" min="1" max="31">
                 </div>
                 <div class="form-group">
-                    <label>出生时辰（小时）</label>
-                    <input type="number" id="hour" placeholder="0-23" min="0" max="23">
+                    <label>出生时辰</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="hour" placeholder="0-23" min="0" max="23" style="width: 80px;">
+                        <input type="number" id="minute" placeholder="0-59" min="0" max="59" style="width: 80px;">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>出生城市</label>
@@ -625,6 +628,7 @@
             const month = document.getElementById("month").value;
             const day = document.getById("day").value;
             const hour = document.getElementById("hour").value;
+            const minute = document.getElementById("minute").value || "0";
             const city = document.getElementById("city").value;
 
             // 验证
@@ -639,7 +643,7 @@
             fetch("/api/bazi", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({name, gender, year, month, day, hour, city})
+                body: JSON.stringify({name, gender, year, month, day, hour, minute, city})
             })
             .then(r => r.json())
             .then(data => {
