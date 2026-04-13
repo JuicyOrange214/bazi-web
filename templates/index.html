@@ -651,6 +651,37 @@
             color: var(--text-muted);
         }
 
+
+        .analysis-summary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .analysis-summary .strength-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        .analysis-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        .dayun-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
     </style>
 </head>
 <body>
@@ -778,6 +809,18 @@
             <div class="result-card">
                 <div class="card-title">节气</div>
                 <div class="jieqi-info" id="jieqiInfo"></div>
+            </div>
+
+            <!-- 综合解读 -->
+            <div class="result-card">
+                <div class="card-title">命理解读</div>
+                <div class="analysis-summary" id="analysisSummary"></div>
+            </div>
+
+            <!-- 性格分析 -->
+            <div class="result-card">
+                <div class="card-title">性格特点</div>
+                <div class="analysis-text" id="analysisCharacter"></div>
             </div>
 
             <!-- 大运 -->
@@ -936,18 +979,42 @@
             var jq = bazi.jieqi;
             document.getElementById("jieqiInfo").innerHTML = '<div class="jieqi-item"><div class="jieqi-label">上一个节气</div><div class="jieqi-value">' + jq.current_jieqi + '</div><div class="jieqi-time">' + jq.current_jieqi_time_local.split(" ")[0] + '</div></div><div class="jieqi-item"><div class="jieqi-label">下一个节气</div><div class="jieqi-value">' + jq.next_jieqi + '</div><div class="jieqi-time">' + jq.next_jieqi_time_local.split(" ")[0] + '</div></div>';
 
-            // 大运时间线
+            // 文字解读
+            var analysis = data.analysis || {};
+            
+            // 命理解读摘要
+            var summary = analysis.summary || "";
+            var strength = analysis.strength || {};
+            document.getElementById("analysisSummary").innerHTML = 
+                '<span class="strength-tag">' + (strength.level || "中和") + '</span>' + summary;
+
+            // 性格分析
+            var charText = analysis.character || {};
+            var charDesc = charText.nature_description || (charText.nature || "");
+            if (charDesc) charDesc += "。";
+            var tenGods = charText.ten_gods || {};
+            if (tenGods.month && tenGods.month !== "其他") charDesc += " 月柱透出" + tenGods.month + "，代表事业心和行动力。";
+            if (tenGods.hour && tenGods.hour !== "其他") charDesc += " 时柱见" + tenGods.hour + "，与晚年/子女缘分相关。";
+            document.getElementById("analysisCharacter").innerHTML = charDesc || "性格平衡，五行较为齐全。";
+
+            // 大运时间线（带文字解读）
             var dayunList = data.bazi_data.dayun.dayun_list;
+            var dayunInterps = (analysis.dayun_interpretations || []).reduce(function(acc, item) {
+                acc[item.ganzhi] = item; return acc;
+            }, {});
             var nowYear = new Date().getFullYear();
             var timelineHtml = "";
             dayunList.forEach(function(d, idx) {
+                if (d.gan_zhi === "小运") return;
                 var gz = d.gan_zhi;
                 var gan = gz.charAt(0);
                 var gzWX = WL[getWuXing(gan)];
                 var isSmall = gz === "小运";
                 var isCurrent = !isSmall && d.year_range && d.year_range.indexOf(String(nowYear)) >= 0;
                 var hasLine = idx < dayunList.length - 1;
-                timelineHtml += '<div class="dayun-card"><div class="dayun-age-col"><div class="dayun-age-label">' + d.age_range + '</div><div class="dayun-age-value">' + d.age_range_xu + '</div></div><div class="dayun-line-col"><div class="dayun-dot"></div>' + (hasLine ? '<div class="dayun-line"></div>' : '') + '</div><div class="dayun-content-col' + (isCurrent ? ' dayun-current' : '') + '"><div class="dayun-gz">' + gan + ' ' + d.gan_zhi.charAt(1) + '</div><div class="dayun-wuxing">' + gzWX + ' · ' + (isSmall ? '小运' : '大运') + '</div><div class="dayun-range">' + d.year_range + '</div></div></div>';
+                var interp = dayunInterps[gz] || {};
+                var desc = interp.description || "";
+                timelineHtml += '<div class="dayun-card"><div class="dayun-age-col"><div class="dayun-age-label">' + d.age_range + '</div><div class="dayun-age-value">' + d.age_range_xu + '</div></div><div class="dayun-line-col"><div class="dayun-dot"></div>' + (hasLine ? '<div class="dayun-line"></div>' : '') + '</div><div class="dayun-content-col' + (isCurrent ? ' dayun-current' : '') + '"><div class="dayun-gz">' + gan + ' ' + d.gan_zhi.charAt(1) + '</div><div class="dayun-wuxing">' + gzWX + ' · ' + (isSmall ? '小运' : '大运') + '</div><div class="dayun-range">' + d.year_range + '</div>' + (desc ? '<div class="dayun-desc">' + desc + '</div>' : '') + '</div></div>';
             });
             document.getElementById("dayunTimeline").innerHTML = timelineHtml;
 

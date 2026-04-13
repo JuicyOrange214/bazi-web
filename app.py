@@ -15,6 +15,7 @@ BAZI_SCRIPTS_PATH = os.path.join(os.path.dirname(__file__), "bazi")
 sys.path.insert(0, BAZI_SCRIPTS_PATH)
 
 from bazi_calculator import compute_bazi_and_dayun
+from bazi_analysis import analyze_bazi
 
 
 @app.route("/")
@@ -26,7 +27,7 @@ def index():
 def calculate_bazi():
     """接收前端数据，返回八字排盘结果"""
     data = request.get_json()
-    
+
     # 解析参数
     year = data.get("year")
     month = data.get("month")
@@ -36,11 +37,11 @@ def calculate_bazi():
     gender = data.get("gender", "女")
     city = data.get("city", "武汉")
     name = data.get("name", "访客")
-    
+
     # 验证必填字段
     if not all([year, month, day, hour]):
         return jsonify({"error": "缺少必要的出生信息"}), 400
-    
+
     try:
         result = compute_bazi_and_dayun(
             year=int(year),
@@ -51,10 +52,15 @@ def calculate_bazi():
             gender=gender,
             city=city
         )
-        
-        # 获取流年信息
+
+        # 提取八字和流年基本信息
         liu_nian_info = _extract_liu_nian_info(result)
-        
+
+        # 生成文字解读
+        ganzhi = result.get("lunar", {}).get("gan_zhi", {})
+        dayun_list = result.get("dayun", {}).get("dayun_list", [])
+        analysis = analyze_bazi(ganzhi, dayun_list, gender, int(year))
+
         return jsonify({
             "success": True,
             "name": name,
@@ -68,22 +74,26 @@ def calculate_bazi():
                 "city": city
             },
             "bazi_data": result,
-            "liu_nian": liu_nian_info
+            "liu_nian": liu_nian_info,
+            # 文字解读
+            "analysis": analysis,
         })
-        
+
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": f"计算失败: {str(e)}"}), 500
 
 
 def _extract_liu_nian_info(result):
     """从八字结果中提取流年信息"""
     from datetime import datetime
-    
+
     current_year = datetime.now().year
     liunian = {}
-    
+
     try:
         dayun_list = result.get("dayun", {}).get("dayun_list", [])
         for dayun in dayun_list:
@@ -98,7 +108,7 @@ def _extract_liu_nian_info(result):
                     }
     except Exception:
         pass
-    
+
     return liunian
 
 
