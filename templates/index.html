@@ -1127,13 +1127,14 @@
             pillars.forEach(p => {
                 const gan = p.gz.charAt(0);
                 const zhi = p.gz.charAt(1);
-                const wuXing = getWuXing(gan);
-                baziHtml += '<div class="bazi-column"><div class="bazi-label">' + p.label + '</div><div class="bazi-ganzhi">' + gan + '</div><div class="bazi-ganzhi">' + zhi + '</div><div class="bazi-element"><span class="wu-xing ' + wuXing + '">' + WU_XING_CN[wuXing] + '</span></div></div>';
+                const ganWuXing = getWuXing(gan);
+                const zhiWuXing = getWuXing(zhi);
+                baziHtml += '<div class="bazi-column"><div class="bazi-label">' + p.label + '</div><div class="bazi-ganzhi"><span class="wu-xing ' + ganWuXing + '">' + gan + '</span><span class="wu-xing ' + ganWuXing + '">' + WU_XING_CN[ganWuXing] + '</span></div><div class="bazi-ganzhi"><span class="wu-xing ' + zhiWuXing + '">' + zhi + '</span><span class="wu-xing ' + zhiWuXing + '">' + WU_XING_CN[zhiWuXing] + '</span></div></div>';
             });
             document.getElementById("baziGrid").innerHTML = baziHtml;
 
             // 姓名和时间
-            const birthStr = data.birth_info.year + '年' + data.birth_info.month + '月' + data.birth_info.day + '日 ' + bazi.date.shichen + '时';
+            const birthStr = data.birth_info.year + '年' + data.birth_info.month + '月' + data.birth_info.day + '日 ' + data.bazi_data.lunar.date.shichen + '时';
             document.getElementById("resultName").textContent = data.name;
             document.getElementById("resultMeta").textContent = birthStr + ' · ' + data.gender;
 
