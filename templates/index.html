@@ -1064,7 +1064,7 @@
             var currentDayun = null;
             dayun.dayun_list.forEach(function(d) { if (d.gan_zhi !== "小运") currentDayun = d; });
 
-            var infoHtml = '<div class="info-cell"><div class="info-cell-label">日主</div><div class="info-cell-value">' + dayGan + '木</div></div>';
+            var infoHtml = '<div class="info-cell"><div class="info-cell-label">日主</div><div class="info-cell-value">' + dayGan + getWx(dayGan) + '</div></div>';
             infoHtml += '<div class="info-cell"><div class="info-cell-label">起运</div><div class="info-cell-value">' + dayun.start_age_description + '</div></div>';
             infoHtml += '<div class="info-cell"><div class="info-cell-label">大运</div><div class="info-cell-value">' + dayun.direction + '</div></div>';
             infoHtml += '<div class="info-cell"><div class="info-cell-label">当前大运</div><div class="info-cell-value gold">' + (currentDayun ? currentDayun.gan_zhi : "—") + '</div></div>';
