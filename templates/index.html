@@ -1093,10 +1093,14 @@
             // 十神详情
             var tgDetails = charText.ten_god_details || {};
             var tgDetailsHtml = "";
+            function cleanPunc(s) { return s.replace(/[，。、；：；.,;:\s]*$/, ""); }
+            function joinList(arr) {
+                return (arr || []).map(cleanPunc).filter(Boolean).join("、");
+            }
             tgPillars.forEach(function(p) {
                 var detail = tgDetails[p] || {};
-                var pos = (detail.positive || []).join("、");
-                var neg = (detail.negative || []).join("、");
+                var pos = joinList(detail.positive);
+                var neg = joinList(detail.negative);
                 var rel = detail.relationship || "";
                 var def = detail.definition || "";
                 tgDetailsHtml += '<div style="margin-top:14px;padding:14px;background:var(--paper);border-radius:var(--radius);border-left:3px solid var(--bamboo)">' +
