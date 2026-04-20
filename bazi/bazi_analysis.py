@@ -354,17 +354,19 @@ def determine_strength(day_gan, month_zhi, wuxing_count):
 
 def determine_gods_and_harm(day_gan, wuxing_count, strength):
     day_gan_wx = GAN_WUXING[day_gan]
-    lack = [wx for wx, cnt in wuxing_count.items() if cnt == 0]
 
     if "身旺" in strength or "偏旺" in strength:
-        if lack:
-            use = lack[:2]
-        else:
-            use = ["水", "金"]
-        avoid = [wx for wx in ["木", "火"] if wx != day_gan_wx]
+        # 身旺：日主太强，需要克泄。忌帮身的水木，喜克身的金，泄秀的火土次之
+        avoid = ["木", "水"]
+        use = ["金", "火", "土"]
+    elif "身弱" in strength or "偏弱" in strength:
+        # 身弱：日主太弱，需要生扶。喜水木生身，忌火土泄耗
+        use = ["水", "木"]
+        avoid = ["火", "土", "金"]
     else:
-        use = ["水", "金"]
-        avoid = [wx for wx in wuxing_count if wuxing_count[wx] >= 3 and wx != day_gan_wx]
+        # 平或从格：综合判断
+        use = ["金", "水"]
+        avoid = ["木", "火"]
 
     return use[:3], avoid[:3]
 
