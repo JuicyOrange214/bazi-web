@@ -1,0 +1,168 @@
+
+            // 五行统计
+            var allChars = ganzhi.year + ganzhi.month + ganzhi.day + ganzhi.hour;
+            var wxCount = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
+            for (var i = 0; i < allChars.length; i++) {
+                var wx = getWx(allChars.charAt(i));
+                if (wxCount[WX_KEY[wx]] !== undefined) wxCount[WX_KEY[wx]]++;
+            }
+            var total = allChars.length;
+
+            // 五行柱状条
+            var barHtml = "";
+            WX_SEQ.forEach(function(w) {
+                var pct = Math.round(wxCount[w] / total * 100);
+                if (pct > 0) barHtml += '<div class="wx-bar-segment ' + w + '" style="width:' + pct + '%"></div>';
+            });
+            d("wxBar").innerHTML = barHtml;
+
+            var legendHtml = "";
+            WX_SEQ.forEach(function(w) {
+                legendHtml += '<div class="wx-legend-item">' + WL[w] + '<span>' + wxCount[w] + '</span></div>';
+            });
+            d("wxLegend").innerHTML = legendHtml;
+
+            // 命局信息
+            var dayun = data.bazi_data.dayun;
+            var currentDayun = null;
+            dayun.dayun_list.forEach(function(d) { if (d.gan_zhi !== "小运") currentDayun = d; });
+
+            var infoHtml = '<div class="info-cell"><div class="info-cell-label">日主</div><div class="info-cell-value">' + dayGan + '木</div></div>';
+            infoHtml += '<div class="info-cell"><div class="info-cell-label">起运</div><div class="info-cell-value">' + dayun.start_age_description + '</div></div>';
+            infoHtml += '<div class="info-cell"><div class="info-cell-label">大运</div><div class="info-cell-value">' + dayun.direction + '</div></div>';
+            infoHtml += '<div class="info-cell"><div class="info-cell-label">当前大运</div><div class="info-cell-value gold">' + (currentDayun ? currentDayun.gan_zhi : "—") + '</div></div>';
+            d("infoRow").innerHTML = infoHtml;
+
+            // 用神忌神（来自API）
+            var use = data.analysis && data.analysis.use ? data.analysis.use : ["金"];
+            var avoid = data.analysis && data.analysis.avoid ? data.analysis.avoid : ["木","水"];
+            var useHtml = "", avoidHtml = "";
+            use.forEach(function(u) { useHtml += '<span class="god-tag">' + u + '</span>'; });
+            avoid.forEach(function(a) { avoidHtml += '<span class="god-tag">' + a + '</span>'; });
+            d("godsGood").innerHTML = useHtml;
+            d("godsBad").innerHTML = avoidHtml;
+
+            // 解读
+            var analysis = data.analysis || {};
+            var strength = analysis.strength || {};
+            d("analysisSummary").innerHTML = '<span class="strength-badge">' + (strength.level || "中和") + '</span>' + (analysis.summary || "");
+
+            var charText = analysis.character || {};
+            d("analysisCharacter").innerHTML = charText.nature_description || "";
+
+            // 十神
+            var tgNames = charText.ten_gods || {};
+            var tgPillars = ["year", "month", "day", "hour"];
+            var tgMap = { year: "年柱", month: "月柱", day: "日柱", hour: "时柱" };
+            var tgHtml = "";
+            tgPillars.forEach(function(p) {
+                var god = tgNames[p] || "其他";
+                tgHtml += '<div class="ten-god-cell"><div class="ten-god-pillar">' + tgMap[p] + '</div><div class="ten-god-name">' + god + '</div></div>';
+            });
+            d("tenGodGrid").innerHTML = tgHtml;
+
+            // 十神详情
+            var tgDetails = charText.ten_god_details || {};
+            var tgDetailsHtml = "";
+            tgPillars.forEach(function(p) {
+                var detail = tgDetails[p] || {};
+                var pos = (detail.positive || []).join("、");
+                var neg = (detail.negative || []).join("、");
+                var rel = detail.relationship || "";
+                var def = detail.definition || "";
+                tgDetailsHtml += '<div style="margin-top:14px;padding:14px;background:var(--paper);border-radius:var(--radius);border-left:3px solid var(--bamboo)">' +
+                    '<div style="font-size:13px;font-weight:700;color:var(--bamboo);margin-bottom:6px">' + tgMap[p] + ' · ' + (tgNames[p]||"其他") + '</div>' +
+                    (def ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">' + def + '</div>' : '') +
+                    (pos ? '<div style="font-size:12px;color:var(--text-light)">特点：' + pos + '</div>' : '') +
+                    (neg ? '<div style="font-size:12px;color:var(--text-light);margin-top:4px">注意：' + neg + '</div>' : '') +
+                    (rel ? '<div style="font-size:12px;color:var(--bamboo);margin-top:4px">感情：' + rel + '</div>' : '') +
+                    '</div>';
+            });
+            d("tenGodDetails").innerHTML = tgDetailsHtml;
+
+            // 优劣势
+            var sw = charText.strengths_weaknesses || {};
+            var posTags = (sw.strengths || []).map(function(s) { return '<span class="sw-tag">' + s + '</span>'; }).join("");
+            var negTags = (sw.weaknesses || []).map(function(w) { return '<span class="sw-tag">' + w + '</span>'; }).join("");
+            d("swGrid").innerHTML = '<div class="sw-box positive"><div class="sw-title">优势</div><div class="sw-tags">' + posTags + '</div></div>' +
+                '<div class="sw-box negative"><div class="sw-title">劣势</div><div class="sw-tags">' + negTags + '</div></div>';
+
+            // 情感社交事业
+            d("emotionalSection").innerHTML = charText.emotional || "情感模式平稳。";
+            d("socialSection").innerHTML = charText.social || "人际关系和谐。";
+            var wuxingDetail = (analysis.wuxing || {}).detail || {};
+            d("careerSection").innerHTML = wuxingDetail.career || "事业发展平稳。";
+
+            // 健康
+            var healthParts = wuxingDetail.health || [];
+            if (healthParts.length > 0) {
+                d("healthGrid").innerHTML = '<div class="health-cell"><div class="health-label">重点关注</div><div class="health-value">' + healthParts[0] + '</div></div>' +
+                    '<div class="health-cell"><div class="health-label">次要注意</div><div class="health-value">' + (healthParts[1] || healthParts[0]) + '</div></div>';
+            } else {
+                d("healthGrid").innerHTML = '<div class="health-cell" style="grid-column:1/-1"><div class="health-label">总体</div><div class="health-value">健康平稳，注意良好生活习惯</div></div>';
+            }
+
+            // 大运时间线
+            var nowYear = new Date().getFullYear();
+            var dayunInterps = (analysis.dayun_interpretations || []).reduce(function(acc, item) {
+                acc[item.ganzhi] = item; return acc;
+            }, {});
+            var nearby = dayun.dayun_list.filter(function(d) {
+                if (d.gan_zhi === "小运") return false;
+                var r = d.year_range || "";
+                var parts = r.split("-");
+                if (parts.length < 2) return false;
+                return parseInt(parts[1]) >= nowYear - 10 && parseInt(parts[0]) <= nowYear + 10;
+            });
+            var timelineHtml = "";
+            nearby.forEach(function(d, idx) {
+                var gan = d.gan_zhi.charAt(0);
+                var wx = getWx(gan);
+                var isCurrent = d.year_range && d.year_range.indexOf(String(nowYear)) >= 0;
+                var interp = dayunInterps[d.gan_zhi] || {};
+                var desc = interp.description || "";
+                timelineHtml += '<div class="dayun-item"><div class="dayun-age"><div class="dayun-age-num">' + d.age_range + '</div><div class="dayun-age-xu">' + d.age_range_xu + '</div></div>' +
+                    '<div class="dayun-axis"><div class="dayun-dot' + (isCurrent ? ' active' : '') + '"></div>' + (idx < nearby.length - 1 ? '<div class="dayun-line"></div>' : '') + '</div>' +
+                    '<div class="dayun-content' + (isCurrent ? ' current' : '') + '"><div class="dayun-gz">' + d.gan_zhi + '</div>' +
+                    '<div class="dayun-wx">' + wx + '</div><div class="dayun-range">' + d.year_range + '</div>' +
+                    (desc ? '<div class="dayun-desc">' + desc + '</div>' : '') + '</div></div>';
+            });
+            d("dayunList").innerHTML = timelineHtml;
+
+            // 流年
+            var liunianData = [];
+            dayun.dayun_list.forEach(function(d) { if (d.liu_nian) liunianData = liunianData.concat(d.liu_nian); });
+            liunianData = liunianData.filter(function(y) {
+                var yr = parseInt(y.year);
+                return yr >= nowYear - 2 && yr <= nowYear + 2;
+            }).slice(0, 5);
+            var liunianHtml = "";
+            liunianData.forEach(function(y) {
+                liunianHtml += '<div class="liunian-cell"><div class="liunian-year">' + y.year + '年</div><div class="liunian-gz">' + y.gan_zhi + '</div><div class="liunian-age">' + y.age_xu + '岁</div></div>';
+            });
+            d("liunianGrid").innerHTML = liunianHtml;
+
+            d("inputForm").style.display = "none";
+            d("resultSection").classList.add("show");
+        }
+
+        function resetForm() {
+            d("resultSection").classList.remove("show");
+            d("inputForm").style.display = "block";
+            d("errorMsg").classList.remove("show");
+        }
+
+        function showError(msg) {
+            var el = d("errorMsg");
+            el.textContent = msg;
+            el.classList.add("show");
+        }
+
+        function hideError() { d("errorMsg").classList.remove("show"); }
+
+        function showLoading(show) { d("loading").classList.toggle("show", show); }
+
+        function d(id) { return document.getElementById(id); }
+    </script>
+</body>
+</html>

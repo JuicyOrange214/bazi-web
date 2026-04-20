@@ -3,103 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>八字排盘 - 命理分析</title>
+    <title>八字命理</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #fafafa;
-            --bg-secondary: #ffffff;
-            --bg-card: #ffffff;
-            --text-primary: #1a1a2e;
-            --text-secondary: #4a4a68;
-            --text-muted: #9090a8;
-            --border: #e8e8f0;
-            --accent: #6366f1;
-            --accent-light: #818cf8;
-            --accent-bg: #eef2ff;
-            --gold: #d4a853;
-            --gold-light: #f0dca0;
-            --success: #10b981;
-            --error: #ef4444;
-            --wood: #3e753b;
-            --fire: #d64036;
-            --earth: #8c6450;
-            --metal: #b08d28;
-            --water: #3d6e85;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
-            --radius: 12px;
-            --radius-sm: 8px;
+            --bg: #F5F3EE;
+            --bg-card: #FDFCFA;
+            --bg-input: #FAFAF8;
+            --text: #2C2C2C;
+            --text-light: #6B6B6B;
+            --text-muted: #9B9B9B;
+            --border: #E0DDD5;
+            --bamboo: #6B8E5A;
+            --bamboo-light: #8FB573;
+            --bamboo-pale: #E8F0E3;
+            --wood: #8B7355;
+            --wood-light: #A89070;
+            --wood-pale: #EDE5D8;
+            --ink: #3D3D3D;
+            --vermilion: #C45C48;
+            --gold: #B8943F;
+            --paper: #FAF8F5;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+            --radius: 6px;
+            --radius-lg: 12px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        /* ── 背景纹理 ── */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                radial-gradient(ellipse at 20% 0%, rgba(107,142,90,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(139,115,85,0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
         }
 
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── 标题区 ── */
         header {
             text-align: center;
-            margin-bottom: 48px;
+            margin-bottom: 52px;
         }
 
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--text-primary);
+        .site-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.1em;
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
         }
 
-        .subtitle {
+        .site-subtitle {
+            font-size: 13px;
             color: var(--text-muted);
-            font-size: 14px;
+            letter-spacing: 0.3em;
+            font-weight: 300;
         }
 
-        /* 输入表单 */
-        .form-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--shadow);
-            margin-bottom: 32px;
-        }
-
-        .form-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 24px;
+        .divider {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
         }
 
-        .form-title::before {
-            content: "";
+        .divider-line {
+            width: 40px;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider-dot {
             width: 4px;
-            height: 18px;
-            background: var(--accent);
-            border-radius: 2px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--bamboo);
+        }
+
+        /* ── 输入卡片 ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-label {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: 0.08em;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
         }
 
         .form-group {
@@ -109,1212 +138,1076 @@
         }
 
         .form-group label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 500;
+            font-size: 12px;
+            color: var(--text-light);
+            letter-spacing: 0.05em;
         }
 
         .form-group input,
         .form-group select {
             padding: 10px 14px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
             font-size: 14px;
-            color: var(--text-primary);
-            background: var(--bg-primary);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            color: var(--text);
+            background: var(--bg-input);
             outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
         }
 
         .form-group input:focus,
         .form-group select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-bg);
+            border-color: var(--bamboo);
+            box-shadow: 0 0 0 3px var(--bamboo-pale);
         }
 
         .form-group input::placeholder {
             color: var(--text-muted);
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 8px;
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-light);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        /* 结果展示 */
-        .result-section {
-            display: none;
-        }
-
-        .result-section.show {
-            display: block;
-        }
-
-        .result-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--shadow);
-            margin-bottom: 24px;
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .result-name {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .result-meta {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .btn-reset {
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-reset:hover {
-            background: var(--border);
-        }
-
-        /* 四柱展示 */
-        .bazi-grid {
+        .form-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-
-        .bazi-column {
-            text-align: center;
-            padding: 16px 8px;
-            background: var(--bg-primary);
-            border-radius: var(--radius-sm);
-        }
-
-        .bazi-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .bazi-ganzhi {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            font-family: "KaiTi", "STKaiti", "楷体", serif;
-        }
-
-        .bazi-element {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .bazi-element .wu-xing {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-top: 4px;
-        }
-
-        .wu-xing.wood { background: #e8f5e9; color: var(--wood); }
-        .wu-xing.fire { background: #ffebee; color: var(--fire); }
-        .wu-xing.earth { background: #efebe9; color: var(--earth); }
-        .wu-xing.metal { background: #fff8e1; color: var(--metal); }
-        .wu-xing.water { background: #e3f2fd; color: var(--water); }
-
-        /* 命理信息 */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 16px;
         }
 
-        .info-item {
-            padding: 16px;
-            background: var(--bg-primary);
-            border-radius: var(--radius-sm);
+        .btn-primary {
+            background: var(--bamboo);
+            color: white;
+            border: none;
+            padding: 13px 40px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Noto Serif SC', serif;
+            display: block;
+            margin: 28px auto 0;
         }
 
-        .info-label {
-            font-size: 12px;
+        .btn-primary:hover {
+            background: var(--bamboo-light);
+            box-shadow: 0 4px 16px rgba(107,142,90,0.3);
+            transform: translateY(-1px);
+        }
+
+        /* ── 四柱展示 ── */
+        .bazi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .bazi-pillar {
+            text-align: center;
+            padding: 18px 8px;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .bazi-pillar-label {
+            font-size: 11px;
             color: var(--text-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .bazi-gan {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .bazi-zhi {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--wood);
             margin-bottom: 6px;
         }
 
-        .info-value {
+        .bazi-wx {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-weight: 400;
+        }
+
+        .wx-木 { background: #E8F0E3; color: #4A7040; }
+        .wx-火 { background: #FBEPE8; color: #A04030; }
+        .wx-土 { background: #EDE5D8; color: #6B5030; }
+        .wx-金 { background: #EDE9E3; color: #605040; }
+        .wx-水 { background: #E3EEF4; color: #3D6070; }
+
+        /* ── 命理信息 ── */
+        .info-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-cell {
+            padding: 14px;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .info-cell-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .info-cell-value {
             font-size: 15px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text);
+            font-family: 'Noto Serif SC', serif;
         }
 
-        .info-value.gold {
-            color: var(--metal);
+        .info-cell-value.gold { color: var(--gold); }
+        .info-cell-value.bamboo { color: var(--bamboo); }
+
+        /* ── 五行分布 ── */
+        .wx-bar-wrap {
+            margin-bottom: 12px;
         }
 
-        /* 喜忌神 */
-        .gods-section {
-            margin-top: 24px;
-            padding: 20px;
-            background: var(--bg-primary);
-            border-radius: var(--radius-sm);
+        .wx-bar {
+            display: flex;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            background: var(--border);
+        }
+
+        .wx-bar-segment {
+            height: 100%;
+            transition: width 0.6s ease;
+        }
+
+        .wx-bar 木 { background: #7BA05B; }
+        .wx-bar 火 { background: #D4644A; }
+        .wx-bar 土 { background: #B8956A; }
+        .wx-bar 金 { background: #8B7355; }
+        .wx-bar 水 { background: #5B8BA0; }
+
+        .wx-legend {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .wx-legend-item {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .wx-legend-item span {
+            font-weight: 600;
+            margin-left: 2px;
+        }
+
+        /* ── 用神忌神 ── */
+        .gods-row {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .gods-box {
+            flex: 1;
+            padding: 16px;
+            border-radius: var(--radius);
+        }
+
+        .gods-box.good {
+            background: var(--bamboo-pale);
+            border: 1px solid rgba(107,142,90,0.2);
+        }
+
+        .gods-box.bad {
+            background: #F5EAE3;
+            border: 1px solid rgba(180,100,80,0.2);
         }
 
         .gods-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 12px;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
+
+        .goods-box .gods-title { color: var(--bamboo); }
+        .bad-box .gods-title { color: var(--vermilion); }
 
         .gods-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .god-tag {
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 4px 12px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        .god-tag.good {
-            background: #dcfce7;
-            color: #166534;
+        .goods-box .god-tag {
+            background: white;
+            color: var(--bamboo);
         }
 
-        .god-tag.bad {
-            background: #fee2e2;
-            color: #991b1b;
+        .bad-box .god-tag {
+            background: white;
+            color: var(--vermilion);
         }
 
-        /* 流年 */
-        .liunian-list {
-            margin-top: 16px;
-        }
-
-        .liunian-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 0;
+        /* ── 解读文字 ── */
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: 0.08em;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
             border-bottom: 1px solid var(--border);
         }
 
-        .liunian-item:last-child {
-            border-bottom: none;
-        }
-
-        .liunian-year {
+        .analysis-text {
             font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            width: 60px;
-        }
-
-        .liunian-gz {
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-family: "KaiTi", "STKaiti", "楷体", serif;
-        }
-
-        .liunian-age {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-left: auto;
-        }
-
-        /* 加载状态 */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* 错误提示 */
-        .error-msg {
-            display: none;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
+            line-height: 2;
+            color: var(--text-light);
             padding: 16px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 20px;
-            font-size: 14px;
+            background: var(--paper);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--bamboo);
         }
 
-        .error-msg.show {
-            display: block;
-        }
-
-        /* 大运 */
-        .dayun-section {
-            margin-top: 24px;
-        }
-
-        .dayun-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-
-        .dayun-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
-
-        .dayun-item {
-            padding: 12px;
-            background: var(--bg-primary);
-            border-radius: var(--radius-sm);
-            text-align: center;
-        }
-
-        .dayun-age {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .dayun-gz {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-family: "KaiTi", "STKaiti", "楷体", serif;
-        }
-
-        /* 响应式 */
-        @media (max-width: 640px) {
-            .container {
-                padding: 24px 16px;
-            }
-            
-            .bazi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .form-card, .result-card {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-        }
-
-        /* 结果页新样式 */
-        .result-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            background: var(--bg-card);
-            border-radius: 16px;
-            margin-bottom: 16px;
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-        .card-subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 400;
-            margin-left: 8px;
-        }
-        .wuxing-bar {
-            display: flex;
-            height: 24px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #f0f0f0;
-        }
-        .wuxing-segment {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .analysis-highlight {
+            background: linear-gradient(135deg, var(--bamboo) 0%, var(--wood) 100%);
             color: white;
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 30px;
-            transition: width 0.3s;
-        }
-        .wuxing-wood { background: #4CAF50; }
-        .wuxing-fire { background: #F44336; }
-        .wuxing-earth { background: #FF9800; }
-        .wuxing-metal { background: #9E9E9E; }
-        .wuxing-water { background: #2196F3; }
-        .wuxing-summary {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .wuxing-tag {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-        .wuxing-tag.wood { background: #E8F5E9; color: #2E7D32; }
-        .wuxing-tag.fire { background: #FFEBEE; color: #C62828; }
-        .wuxing-tag.earth { background: #FFF3E0; color: #E65100; }
-        .wuxing-tag.metal { background: #F5F5F5; color: #616161; }
-        .wuxing-tag.water { background: #E3F2FD; color: #1565C0; }
-        .jieqi-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .jieqi-item {
-            background: var(--bg-secondary);
-            padding: 12px;
-            border-radius: 12px;
-        }
-        .jieqi-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-        .jieqi-value {
+            padding: 16px 20px;
+            border-radius: var(--radius);
             font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .jieqi-time {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        .dayun-timeline {
-            position: relative;
-        }
-        .dayun-card {
-            display: flex;
-            align-items: stretch;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        .dayun-age-col {
-            width: 80px;
-            flex-shrink: 0;
-            padding-right: 12px;
-            text-align: right;
-        }
-        .dayun-age-label {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .dayun-age-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .dayun-line-col {
-            width: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-        .dayun-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            margin-top: 4px;
-            z-index: 1;
-        }
-        .dayun-line {
-            width: 2px;
-            flex: 1;
-            background: var(--border);
-        }
-        .dayun-content-col {
-            flex: 1;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-left: 8px;
-        }
-        .dayun-gz {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
+            line-height: 2;
             margin-bottom: 4px;
-        }
-        .dayun-wuxing {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        .dayun-range {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .dayun-current {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white !important;
-        }
-        .dayun-current .dayun-wuxing {
-            color: rgba(255,255,255,0.85);
-        }
-        .dayun-current .dayun-range {
-            color: rgba(255,255,255,0.7);
-        }
-        .liunian-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .liunian-item {
-            background: var(--bg-secondary);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-        .liunian-year {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .liunian-gz {
-            font-size: 15px;
-            font-weight: 700;
-            margin: 4px 0;
-        }
-        .liunian-age {
-            font-size: 11px;
-            color: var(--text-muted);
         }
 
-
-        .analysis-summary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-        .analysis-summary .strength-tag {
+        .strength-badge {
             display: inline-block;
             background: rgba(255,255,255,0.2);
             padding: 2px 10px;
             border-radius: 10px;
             font-size: 12px;
-            margin-right: 8px;
+            margin-right: 6px;
         }
-        .analysis-text {
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            padding: 12px;
-            background: var(--bg-secondary);
-            border-radius: 10px;
+
+        /* ── 十神 ── */
+        .ten-god-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
         }
-        .dayun-desc {
-            font-size: 12px;
+
+        .ten-god-cell {
+            text-align: center;
+            padding: 12px 6px;
+            background: var(--paper);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .ten-god-pillar {
+            font-size: 11px;
             color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .ten-god-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--bamboo);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .ten-god-trait {
+            font-size: 10px;
+            color: var(--text-light);
             margin-top: 4px;
         }
 
+        /* ── 大运时间线 ── */
+        .dayun-list {
+            position: relative;
+        }
 
-        .strength-weakness {
+        .dayun-item {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 0;
+        }
+
+        .dayun-age {
+            width: 72px;
+            flex-shrink: 0;
+            text-align: right;
+            padding-right: 14px;
+            padding-top: 4px;
+        }
+
+        .dayun-age-num {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .dayun-age-xu {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dayun-axis {
+            width: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .dayun-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--bg-card);
+            flex-shrink: 0;
+            margin-top: 6px;
+            z-index: 1;
+        }
+
+        .dayun-dot.active {
+            background: var(--bamboo);
+            box-shadow: 0 0 0 3px rgba(107,142,90,0.2);
+        }
+
+        .dayun-line {
+            width: 1px;
+            flex: 1;
+            background: var(--border);
+            min-height: 20px;
+        }
+
+        .dayun-content {
+            flex: 1;
+            padding: 8px 14px;
+            margin-bottom: 10px;
+            background: var(--paper);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .dayun-content.current {
+            background: linear-gradient(135deg, rgba(107,142,90,0.08), rgba(139,115,85,0.06));
+            border-color: rgba(107,142,90,0.3);
+        }
+
+        .dayun-gz {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .dayun-wx {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 2px;
+        }
+
+        .dayun-range {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dayun-desc {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+            line-height: 1.7;
+        }
+
+        /* ── 流年 ── */
+        .liunian-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .liunian-cell {
+            text-align: center;
+            padding: 12px 4px;
+            background: var(--paper);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .liunian-year {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .liunian-gz {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--wood);
+            margin: 4px 0;
+        }
+
+        .liunian-age {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ── 优劣势 ── */
+        .sw-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .sw-box {
+            padding: 16px;
+            border-radius: var(--radius);
+        }
+
+        .sw-box.positive {
+            background: var(--bamboo-pale);
+            border-left: 3px solid var(--bamboo);
+        }
+
+        .sw-box.negative {
+            background: #F5EAE3;
+            border-left: 3px solid var(--vermilion);
+        }
+
+        .sw-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .positive .sw-title { color: var(--bamboo); }
+        .negative .sw-title { color: var(--vermilion); }
+
+        .sw-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .sw-tag {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+
+        .positive .sw-tag {
+            background: white;
+            color: var(--bamboo);
+        }
+
+        .negative .sw-tag {
+            background: white;
+            color: var(--vermilion);
+        }
+
+        /* ── 健康 ── */
+        .health-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
-        .sw-box {
-            padding: 12px;
-            border-radius: 10px;
-        }
-        .sw-strength {
-            background: #E8F5E9;
-            border-left: 3px solid #4CAF50;
-        }
-        .sw-weakness {
-            background: #FFF3E0;
-            border-left: 3px solid #FF9800;
-        }
-        .sw-title {
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .sw-strength .sw-title { color: #2E7D32; }
-        .sw-weakness .sw-title { color: #E65100; }
-        .sw-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .sw-tag {
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 8px;
-        }
-        .sw-strength .sw-tag {
-            background: #C8E6C9;
-            color: #1B5E20;
-        }
-        .sw-weakness .sw-tag {
-            background: #FFE0B2;
-            color: #BF360C;
-        }
-        .tengod-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        .tengod-item {
-            text-align: center;
-            padding: 10px 4px;
-            background: var(--bg-secondary);
-            border-radius: 10px;
-        }
-        .tengod-pillar {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-        .tengod-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        .tengod-trait {
-            font-size: 10px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
 
-
-        .analysis-text {
-            font-size: 14px;
-            line-height: 2;
-            color: var(--text-secondary);
-            padding: 12px;
-            background: var(--bg-secondary);
-            border-radius: 10px;
-        }
-        .ten-god-detail-card {
-            margin-bottom: 14px;
+        .health-cell {
             padding: 14px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-        }
-        .ten-god-detail-card:last-child { margin-bottom: 0; }
-        .ten-god-detail-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .ten-god-pillar-badge {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 10px;
-            background: var(--accent);
-            color: white;
-        }
-        .ten-god-name-badge {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        .ten-god-def {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-        .ten-god-subtitle {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        .ten-god-positive, .ten-god-negative {
-            font-size: 12px;
-            line-height: 1.9;
-            color: var(--text-secondary);
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-        .ten-god-positive li, .ten-god-negative li {
-            margin-bottom: 2px;
-        }
-        .health-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .health-item {
-            background: var(--bg-secondary);
-            padding: 12px;
-            border-radius: 10px;
+            background: var(--paper);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             text-align: center;
         }
+
         .health-label {
             font-size: 11px;
             color: var(--text-muted);
             margin-bottom: 4px;
         }
+
         .health-value {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--accent);
+            color: var(--bamboo);
         }
 
+        /* ── 结果页 ── */
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-        .liunian-intro {
+        .result-name {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .result-meta {
             font-size: 13px;
             color: var(--text-muted);
-            background: var(--bg-secondary);
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            line-height: 1.8;
-        }
-        .liunian-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 6px;
-            line-height: 1.7;
+            margin-top: 2px;
         }
 
+        .btn-reset {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-reset:hover {
+            background: var(--paper);
+            border-color: var(--text-muted);
+        }
+
+        /* ── 错误 / 加载 ── */
+        .error-msg {
+            display: none;
+            background: #FDF0EE;
+            border: 1px solid #F0C8C0;
+            color: var(--vermilion);
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .error-msg.show { display: block; }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 48px;
+        }
+
+        .loading.show { display: block; }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border);
+            border-top-color: var(--bamboo);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ── 响应式 ── */
+        @media (max-width: 640px) {
+            .container { padding: 32px 16px; }
+            .card { padding: 24px 20px; }
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .bazi-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-row { grid-template-columns: repeat(2, 1fr); }
+            .ten-god-grid { grid-template-columns: repeat(2, 1fr); }
+            .liunian-grid { grid-template-columns: repeat(3, 1fr); }
+            .gods-row { flex-direction: column; }
+            .sw-grid { grid-template-columns: 1fr; }
+            .dayun-age { width: 56px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* ── 隐藏逻辑 ── */
+        .result-section { display: none; }
+        .result-section.show { display: block; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>八字排盘</h1>
-            <p class="subtitle">输入出生信息，获取命理分析</p>
+            <div class="site-title">八字命理</div>
+            <div class="site-subtitle">生辰 · 四柱 · 命局</div>
+            <div class="divider">
+                <div class="divider-line"></div>
+                <div class="divider-dot"></div>
+                <div class="divider-line"></div>
+            </div>
         </header>
 
         <!-- 输入表单 -->
-        <div class="form-card" id="inputForm">
-            <div class="form-title">出生信息</div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>姓名</label>
-                    <input type="text" id="name" placeholder="你的名字" value="">
+        <div id="inputForm">
+            <div class="card">
+                <div class="card-label">出生信息</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="name" placeholder="你的名字" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>性别</label>
+                        <select id="gender">
+                            <option value="女">女</option>
+                            <option value="男">男</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>出生年份</label>
+                        <input type="number" id="year" placeholder="1991" min="1900" max="2025">
+                    </div>
+                    <div class="form-group">
+                        <label>出生月份</label>
+                        <input type="number" id="month" placeholder="1-12" min="1" max="12">
+                    </div>
+                    <div class="form-group">
+                        <label>出生日期</label>
+                        <input type="number" id="day" placeholder="1-31" min="1" max="31">
+                    </div>
+                    <div class="form-group">
+                        <label>出生时辰（小时）</label>
+                        <input type="number" id="hour" placeholder="0-23" min="0" max="23">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>性别</label>
-                    <select id="gender">
-                        <option value="女">女</option>
-                        <option value="男">男</option>
-                    </select>
+                <div class="form-row" style="margin-top:16px">
+                    <div class="form-group">
+                        <label>分钟</label>
+                        <input type="number" id="minute" placeholder="0-59" min="0" max="59" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>出生城市</label>
+                        <select id="city">
+                            <option value="武汉">武汉</option>
+                            <option value="北京">北京</option>
+                            <option value="上海">上海</option>
+                            <option value="广州">广州</option>
+                            <option value="深圳">深圳</option>
+                            <option value="成都">成都</option>
+                            <option value="杭州">杭州</option>
+                            <option value="南京">南京</option>
+                            <option value="西安">西安</option>
+                            <option value="重庆">重庆</option>
+                            <option value="天津">天津</option>
+                            <option value="苏州">苏州</option>
+                            <option value="郑州">郑州</option>
+                            <option value="长沙">长沙</option>
+                            <option value="沈阳">沈阳</option>
+                            <option value="青岛">青岛</option>
+                            <option value="济南">济南</option>
+                            <option value="大连">大连</option>
+                            <option value="东莞">东莞</option>
+                            <option value="厦门">厦门</option>
+                            <option value="福州">福州</option>
+                            <option value="昆明">昆明</option>
+                            <option value="贵阳">贵阳</option>
+                            <option value="哈尔滨">哈尔滨</option>
+                            <option value="长春">长春</option>
+                            <option value="石家庄">石家庄</option>
+                            <option value="太原">太原</option>
+                            <option value="南昌">南昌</option>
+                            <option value="合肥">合肥</option>
+                            <option value="兰州">兰州</option>
+                            <option value="乌鲁木齐">乌鲁木齐</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>出生年份</label>
-                    <input type="number" id="year" placeholder="1991" min="1900" max="2025">
-                </div>
-                <div class="form-group">
-                    <label>出生月份</label>
-                    <input type="number" id="month" placeholder="1-12" min="1" max="12">
-                </div>
-                <div class="form-group">
-                    <label>出生日期</label>
-                    <input type="number" id="day" placeholder="1-31" min="1" max="31">
-                </div>
-                <div class="form-group">
-                    <label>出生时辰（小时）</label>
-                    <input type="number" id="hour" placeholder="0-23" min="0" max="23">
-                </div>
-                <div class="form-group">
-                    <label>分钟</label>
-                    <input type="number" id="minute" placeholder="0-59" min="0" max="59" style="width: 80px;">
-                </div>
-                <div class="form-group">
-                    <label>出生城市</label>
-                    <select id="city">
-                        <option value="武汉">武汉</option>
-                        <option value="北京">北京</option>
-                        <option value="上海">上海</option>
-                        <option value="广州">广州</option>
-                        <option value="深圳">深圳</option>
-                        <option value="成都">成都</option>
-                        <option value="杭州">杭州</option>
-                        <option value="南京">南京</option>
-                        <option value="西安">西安</option>
-                        <option value="重庆">重庆</option>
-                        <option value="天津">天津</option>
-                        <option value="苏州">苏州</option>
-                        <option value="郑州">郑州</option>
-                        <option value="长沙">长沙</option>
-                        <option value="沈阳">沈阳</option>
-                        <option value="青岛">青岛</option>
-                        <option value="济南">济南</option>
-                        <option value="大连">大连</option>
-                        <option value="东莞">东莞</option>
-                        <option value="厦门">厦门</option>
-                        <option value="福州">福州</option>
-                        <option value="昆明">昆明</option>
-                        <option value="贵阳">贵阳</option>
-                        <option value="哈尔滨">哈尔滨</option>
-                        <option value="长春">长春</option>
-                        <option value="石家庄">石家庄</option>
-                        <option value="太原">太原</option>
-                        <option value="南昌">南昌</option>
-                        <option value="合肥">合肥</option>
-                        <option value="兰州">兰州</option>
-                        <option value="乌鲁木齐">乌鲁木齐</option>
-                    </select>
-                </div>
+                <button class="btn-primary" onclick="calculate()">开 始 排 盘</button>
             </div>
-            <button class="btn-primary" onclick="calculate()">开始排盘</button>
         </div>
 
-        <!-- 错误提示 -->
+        <!-- 错误 -->
         <div class="error-msg" id="errorMsg"></div>
 
-        <!-- 加载中 -->
+        <!-- 加载 -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p style="color: var(--text-muted);">正在分析...</p>
+            <p>正在解析命盘...</p>
         </div>
 
-        <!-- 结果展示 -->
+        <!-- 结果 -->
         <div class="result-section" id="resultSection">
-            <div class="result-header-bar">
+
+            <!-- 头部 -->
+            <div class="result-header">
                 <div>
-                    <div class="result-name" id="resultName">张三</div>
-                    <div class="result-meta" id="resultMeta">1991年2月14日 丙戌时 · 女</div>
+                    <div class="result-name" id="resultName">—</div>
+                    <div class="result-meta" id="resultMeta">— · —</div>
                 </div>
                 <button class="btn-reset" onclick="resetForm()">重新测算</button>
             </div>
 
-            <!-- 四柱八字 -->
-            <div class="result-card">
-                <div class="card-title">四柱八字</div>
+            <!-- 四柱 -->
+            <div class="card">
+                <div class="card-label">四柱八字</div>
                 <div class="bazi-grid" id="baziGrid"></div>
             </div>
 
-            <!-- 五行分布 -->
-            <div class="result-card">
-                <div class="card-title">五行分布</div>
-                <div class="wuxing-bar" id="wuxingBar"></div>
-                <div class="wuxing-summary" id="wuxingSummary"></div>
+            <!-- 五行 -->
+            <div class="card">
+                <div class="card-label">五行分布</div>
+                <div class="wx-bar-wrap">
+                    <div class="wx-bar" id="wxBar"></div>
+                </div>
+                <div class="wx-legend" id="wxLegend"></div>
             </div>
 
-            <!-- 八字强弱 & 用神 -->
-            <div class="result-card">
-                <div class="card-title">命局分析</div>
-                <div class="info-grid" id="infoGrid"></div>
-                <div class="gods-section" id="godsSection"></div>
-            </div>
-
-            <!-- 节气信息 -->
-            <div class="result-card">
-                <div class="card-title">节气</div>
-                <div class="jieqi-info" id="jieqiInfo"></div>
+            <!-- 命局 -->
+            <div class="card">
+                <div class="card-label">命局概况</div>
+                <div class="info-row" id="infoRow"></div>
+                <div class="gods-row">
+                    <div class="gods-box good">
+                        <div class="gods-title">喜 · 用神</div>
+                        <div class="gods-tags" id="godsGood"></div>
+                    </div>
+                    <div class="gods-box bad">
+                        <div class="gods-title">忌 · 忌神</div>
+                        <div class="gods-tags" id="godsBad"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- 综合解读 -->
-            <div class="result-card">
-                <div class="card-title">命理解读</div>
-                <div class="analysis-summary" id="analysisSummary"></div>
+            <div class="card">
+                <div class="card-label">命理总述</div>
+                <div class="analysis-highlight" id="analysisSummary"></div>
             </div>
 
             <!-- 性格总述 -->
-            <div class="result-card">
-                <div class="card-title">性格解读</div>
+            <div class="card">
+                <div class="card-label">性格解读</div>
                 <div class="analysis-text" id="analysisCharacter"></div>
             </div>
 
-            <!-- 各柱十神详解 -->
-            <div class="result-card">
-                <div class="card-title">四柱十神详解</div>
-                <div class="tengod-detail-section" id="tenGodDetailSection"></div>
+            <!-- 十神 -->
+            <div class="card">
+                <div class="card-label">四柱十神</div>
+                <div class="ten-god-grid" id="tenGodGrid"></div>
+                <div id="tenGodDetails"></div>
             </div>
 
-            <!-- 性格优劣势 -->
-            <div class="result-card">
-                <div class="card-title">性格优劣势</div>
-                <div class="strength-weakness" id="strengthWeakness"></div>
+            <!-- 优劣势 -->
+            <div class="card">
+                <div class="card-label">性格优劣势</div>
+                <div class="sw-grid" id="swGrid"></div>
             </div>
 
-            <!-- 情感模式 -->
-            <div class="result-card">
-                <div class="card-title">情感模式</div>
+            <!-- 情感 -->
+            <div class="card">
+                <div class="card-label">情感模式</div>
                 <div class="analysis-text" id="emotionalSection"></div>
             </div>
 
-            <!-- 社交人际 -->
-            <div class="result-card">
-                <div class="card-title">社交人际</div>
+            <!-- 社交 -->
+            <div class="card">
+                <div class="card-label">社交人际</div>
                 <div class="analysis-text" id="socialSection"></div>
             </div>
 
-            <!-- 事业发展 -->
-            <div class="result-card">
-                <div class="card-title">事业发展建议</div>
+            <!-- 事业 -->
+            <div class="card">
+                <div class="card-label">事业发展</div>
                 <div class="analysis-text" id="careerSection"></div>
             </div>
 
-            <!-- 健康提醒 -->
-            <div class="result-card">
-                <div class="card-title">健康提醒</div>
-                <div class="health-section" id="healthSection"></div>
+            <!-- 健康 -->
+            <div class="card">
+                <div class="card-label">健康提醒</div>
+                <div class="health-grid" id="healthGrid"></div>
             </div>
 
             <!-- 大运 -->
-            <div class="result-card">
-                <div class="card-title">大运走势 <span class="card-subtitle">每步10年</span></div>
-                <div class="dayun-timeline" id="dayunTimeline"></div>
+            <div class="card">
+                <div class="card-label">大运走势</div>
+                <div class="dayun-list" id="dayunList"></div>
             </div>
 
             <!-- 流年 -->
-            <div class="result-card">
-                <div class="card-title">流年 <span class="card-subtitle">近五年</span></div>
-                <div class="liunian-intro" id="liunianIntro"></div>
-                <div class="liunian-list" id="liunianList"></div>
+            <div class="card">
+                <div class="card-label">近五年流年</div>
+                <div class="liunian-grid" id="liunianGrid"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // 五行映射
-        const ELEMENT_MAP = {
-            "甲": "wood", "乙": "wood",
-            "丙": "fire", "丁": "fire",
-            "戊": "earth", "己": "earth",
-            "庚": "metal", "辛": "metal",
-            "壬": "water", "癸": "water",
-            "子": "water", "丑": "earth",
-            "寅": "wood", "卯": "wood",
-            "辰": "earth", "巳": "fire",
-            "午": "fire", "未": "earth",
-            "申": "metal", "酉": "metal",
-            "戌": "earth", "亥": "water"
+        const WX_MAP = {
+            "甲": "木", "乙": "木", "丙": "火", "丁": "火",
+            "戊": "土", "己": "土", "庚": "金", "辛": "金",
+            "壬": "水", "癸": "水",
+            "子": "水", "丑": "土", "寅": "木", "卯": "木",
+            "辰": "土", "巳": "火", "午": "火", "未": "土",
+            "申": "金", "酉": "金", "戌": "土", "亥": "水"
         };
+        const WX_CN = ["木", "火", "土", "金", "水"];
+        const WX_KEY = { "木": "wood", "火": "fire", "土": "earth", "金": "metal", "水": "water" };
 
-        const WU_XING_CN = {
-            "wood": "木",
-            "fire": "火",
-            "earth": "土",
-            "metal": "金",
-            "water": "水"
-        };
-
-        const GAN = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
-        const ZHI = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
-        const SHICHEN = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
-
-        function getWuXing(char) {
-            return ELEMENT_MAP[char] || "earth";
-        }
+        function getWx(char) { return WX_MAP[char] || "土"; }
 
         function calculate() {
-            var doc = document;
-            var name = doc.getElementById("name").value || "访客";
-            var gender = doc.getElementById("gender").value;
-            var year = doc.getElementById("year").value;
-            var month = doc.getElementById("month").value;
-            var day = doc.getElementById("day").value;
-            var hour = doc.getElementById("hour").value;
-            var minute = doc.getElementById("minute").value || "0";
-            var city = doc.getElementById("city").value;
-
-            // 验证
-            if (!year || !month || !day || !hour) {
-                showError("请填写完整的出生信息");
-                return;
-            }
-
+            var d = document;
+            var name = d.getElementById("name").value || "访客";
+            var gender = d.getElementById("gender").value;
+            var year = d.getElementById("year").value;
+            var month = d.getElementById("month").value;
+            var day = d.getElementById("day").value;
+            var hour = d.getElementById("hour").value;
+            var minute = d.getElementById("minute").value || "0";
+            var city = d.getElementById("city").value;
+            if (!year || !month || !day || hour === "") { showError("请填写完整的出生信息"); return; }
             hideError();
             showLoading(true);
-
             fetch("/api/bazi", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({name, gender, year, month, day, hour, minute, city})
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, gender, year, month, day, hour, minute, city })
             })
             .then(r => r.json())
             .then(data => {
                 showLoading(false);
-                if (data.error) {
-                    showError(data.error);
-                    return;
-                }
+                if (data.error) { showError(data.error); return; }
                 displayResult(data);
             })
-            .catch(err => {
-                showLoading(false);
-                showError("网络错误，请稍后重试");
-                console.error(err);
-            });
+            .catch(() => { showLoading(false); showError("网络错误，请稍后重试"); });
         }
 
         function displayResult(data) {
-            const bazi = data.bazi_data.lunar;
-            const ganzhi = bazi.gan_zhi;
-            
+            var bazi = data.bazi_data.lunar;
+            var ganzhi = bazi.gan_zhi;
+            var dayGan = ganzhi.day.charAt(0);
+            var WL = { wood: "木", fire: "火", earth: "土", metal: "金", water: "水" };
+            var WX_SEQ = ["wood", "fire", "earth", "metal", "water"];
+
+            // 姓名时间
+            d("resultName").textContent = data.name;
+            d("resultMeta").textContent =
+                data.birth_info.year + "年" + data.birth_info.month + "月" + data.birth_info.day + "日 " +
+                bazi.date.shichen + "时 · " + data.gender;
+
             // 四柱
-            const pillars = [
+            var pillars = [
                 { label: "年柱", gz: ganzhi.year },
                 { label: "月柱", gz: ganzhi.month },
                 { label: "日柱", gz: ganzhi.day },
                 { label: "时柱", gz: ganzhi.hour }
             ];
-            let baziHtml = "";
-            pillars.forEach(p => {
-                const gan = p.gz.charAt(0);
-                const zhi = p.gz.charAt(1);
-                const ganWuXing = getWuXing(gan);
-                const zhiWuXing = getWuXing(zhi);
-                baziHtml += '<div class="bazi-column"><div class="bazi-label">' + p.label + '</div><div class="bazi-ganzhi"><span class="wu-xing ' + ganWuXing + '">' + gan + '</span><span class="wu-xing ' + ganWuXing + '">' + WU_XING_CN[ganWuXing] + '</span></div><div class="bazi-ganzhi"><span class="wu-xing ' + zhiWuXing + '">' + zhi + '</span><span class="wu-xing ' + zhiWuXing + '">' + WU_XING_CN[zhiWuXing] + '</span></div></div>';
+            var baziHtml = "";
+            pillars.forEach(function(p) {
+                var gan = p.gz.charAt(0), zhi = p.gz.charAt(1);
+                var wx = getWx(gan);
+                baziHtml += '<div class="bazi-pillar"><div class="bazi-pillar-label">' + p.label + '</div>' +
+                    '<div class="bazi-gan">' + gan + '</div>' +
+                    '<div class="bazi-zhi">' + zhi + '</div>' +
+                    '<span class="bazi-wx wx-' + wx + '">' + wx + '</span></div>';
             });
-            document.getElementById("baziGrid").innerHTML = baziHtml;
+            d("baziGrid").innerHTML = baziHtml;
 
-            // 姓名和时间
-            const birthStr = data.birth_info.year + '年' + data.birth_info.month + '月' + data.birth_info.day + '日 ' + data.bazi_data.lunar.date.shichen + '时';
-            document.getElementById("resultName").textContent = data.name;
-            document.getElementById("resultMeta").textContent = birthStr + ' · ' + data.gender;
-
-            const dayGan = ganzhi.day.charAt(0);
-
+            // 五
             // 五行统计
-            const allChars = ganzhi.year + ganzhi.month + ganzhi.day + ganzhi.hour;
-            const wuxingCount = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
-            for (const c of allChars) { var e = getWuXing(c); if (e) wuxingCount[e]++; }
-            const total = allChars.length;
-            const WL = { wood: "木", fire: "火", earth: "土", metal: "金", water: "水" };
-            const wuxingOrder = ["wood", "fire", "earth", "metal", "water"];
-            
+            var allChars = ganzhi.year + ganzhi.month + ganzhi.day + ganzhi.hour;
+            var wxCount = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
+            for (var i = 0; i < allChars.length; i++) {
+                var wx = getWx(allChars.charAt(i));
+                if (wxCount[WX_KEY[wx]] !== undefined) wxCount[WX_KEY[wx]]++;
+            }
+            var total = allChars.length;
+
+            // 五行柱状条
             var barHtml = "";
-            wuxingOrder.forEach(function(w) {
-                var pct = Math.round(wuxingCount[w] / total * 100);
-                if (pct > 0) barHtml += '<div class="wuxing-segment wuxing-' + w + '" style="width:' + pct + '%">' + (pct > 12 ? WL[w] + wuxingCount[w] : "") + '</div>';
+            WX_SEQ.forEach(function(w) {
+                var pct = Math.round(wxCount[w] / total * 100);
+                if (pct > 0) barHtml += '<div class="wx-bar-segment ' + w + '" style="width:' + pct + '%"></div>';
             });
-            document.getElementById("wuxingBar").innerHTML = barHtml;
-            var summaryHtml = "";
-            wuxingOrder.forEach(function(w) { summaryHtml += '<span class="wuxing-tag ' + w + '">' + WL[w] + wuxingCount[w] + '</span>'; });
-            document.getElementById("wuxingSummary").innerHTML = summaryHtml;
+            d("wxBar").innerHTML = barHtml;
+
+            var legendHtml = "";
+            WX_SEQ.forEach(function(w) {
+                legendHtml += '<div class="wx-legend-item">' + WL[w] + '<span>' + wxCount[w] + '</span></div>';
+            });
+            d("wxLegend").innerHTML = legendHtml;
 
             // 命局信息
-            var infoHtml = '<div class="info-item"><div class="info-label">日主</div><div class="info-value">' + dayGan + '木</div></div>';
-            infoHtml += '<div class="info-item"><div class="info-label">起运年龄</div><div class="info-value">' + data.bazi_data.dayun.start_age_description + '</div></div>';
-            infoHtml += '<div class="info-item"><div class="info-label">大运</div><div class="info-value">' + data.bazi_data.dayun.direction + '</div></div>';
-            var currentDayun = data.bazi_data.dayun.dayun_list.find(function(d) { return d.gan_zhi !== "小运"; });
-            infoHtml += '<div class="info-item"><div class="info-label">当前大运</div><div class="info-value gold">' + (currentDayun ? currentDayun.gan_zhi : "—") + '</div></div>';
-            document.getElementById("infoGrid").innerHTML = infoHtml;
+            var dayun = data.bazi_data.dayun;
+            var currentDayun = null;
+            dayun.dayun_list.forEach(function(d) { if (d.gan_zhi !== "小运") currentDayun = d; });
 
-            // 用神喜忌
-            var lack = wuxingOrder.filter(function(w) { return wuxingCount[w] === 0; });
-            var goods = lack.length > 0 ? lack.map(function(w) { return WL[w]; }) : ["金", "土"];
-            var bads = ["木", "水"].filter(function(w) { return goods.indexOf(w) === -1; });
-            
-            var godsHtml = '<div class="gods-title">喜用神 <span style="font-weight:400;color:var(--text-muted)">补五行</span></div><div class="gods-tags">';
-            goods.forEach(function(g) { godsHtml += '<span class="god-tag good">' + g + '</span>'; });
-            godsHtml += '</div><div class="gods-title" style="margin-top:14px">忌神 <span style="font-weight:400;color:var(--text-muted)">避五行</span></div><div class="gods-tags">';
-            bads.forEach(function(g) { godsHtml += '<span class="god-tag bad">' + g + '</span>'; });
-            godsHtml += '</div>';
-            document.getElementById("godsSection").innerHTML = godsHtml;
+            var infoHtml = '<div class="info-cell"><div class="info-cell-label">日主</div><div class="info-cell-value">' + dayGan + '木</div></div>';
+            infoHtml += '<div class="info-cell"><div class="info-cell-label">起运</div><div class="info-cell-value">' + dayun.start_age_description + '</div></div>';
+            infoHtml += '<div class="info-cell"><div class="info-cell-label">大运</div><div class="info-cell-value">' + dayun.direction + '</div></div>';
+            infoHtml += '<div class="info-cell"><div class="info-cell-label">当前大运</div><div class="info-cell-value gold">' + (currentDayun ? currentDayun.gan_zhi : "—") + '</div></div>';
+            d("infoRow").innerHTML = infoHtml;
 
-            // 节气
-            var jq = bazi.jieqi;
-            document.getElementById("jieqiInfo").innerHTML = '<div class="jieqi-item"><div class="jieqi-label">上一个节气</div><div class="jieqi-value">' + jq.current_jieqi + '</div><div class="jieqi-time">' + jq.current_jieqi_time_local.split(" ")[0] + '</div></div><div class="jieqi-item"><div class="jieqi-label">下一个节气</div><div class="jieqi-value">' + jq.next_jieqi + '</div><div class="jieqi-time">' + jq.next_jieqi_time_local.split(" ")[0] + '</div></div>';
+            // 用神忌神（来自API）
+            var use = data.analysis && data.analysis.use ? data.analysis.use : ["金"];
+            var avoid = data.analysis && data.analysis.avoid ? data.analysis.avoid : ["木","水"];
+            var useHtml = "", avoidHtml = "";
+            use.forEach(function(u) { useHtml += '<span class="god-tag">' + u + '</span>'; });
+            avoid.forEach(function(a) { avoidHtml += '<span class="god-tag">' + a + '</span>'; });
+            d("godsGood").innerHTML = useHtml;
+            d("godsBad").innerHTML = avoidHtml;
 
-            // 文字解读
+            // 解读
             var analysis = data.analysis || {};
-            
-            // 命理解读摘要
-            var summary = analysis.summary || "";
             var strength = analysis.strength || {};
-            document.getElementById("analysisSummary").innerHTML = 
-                '<span class="strength-tag">' + (strength.level || "中和") + '</span>' + summary;
+            d("analysisSummary").innerHTML = '<span class="strength-badge">' + (strength.level || "中和") + '</span>' + (analysis.summary || "");
 
-            // 性格总述
             var charText = analysis.character || {};
-            var charDesc = charText.nature_description || "";
-            document.getElementById("analysisCharacter").innerHTML = charDesc;
+            d("analysisCharacter").innerHTML = charText.nature_description || "";
 
-            // 四柱十神详解
-            var tgDetails = charText.ten_god_details || {};
-            var tgMap = {year: "年柱", month: "月柱", day: "日柱", hour: "时柱"};
+            // 十神
             var tgNames = charText.ten_gods || {};
-            var tgHtml = '';
-            ["year", "month", "day", "hour"].forEach(function(p) {
+            var tgPillars = ["year", "month", "day", "hour"];
+            var tgMap = { year: "年柱", month: "月柱", day: "日柱", hour: "时柱" };
+            var tgHtml = "";
+            tgPillars.forEach(function(p) {
                 var god = tgNames[p] || "其他";
-                var detail = tgDetails[p] || null;
-                var posList = detail && detail.positive ? detail.positive.join(' ') : '';
-                var negList = detail && detail.negative ? detail.negative.join(' ') : '';
-                var relText = detail && detail.relationship ? detail.relationship : '';
-                var defText = detail && detail.definition ? detail.definition : '';
-                tgHtml += '<div class="ten-god-detail-card"><div class="ten-god-detail-header"><span class="ten-god-pillar-badge">' + tgMap[p] + '</span><span class="ten-god-name-badge">' + god + '</span></div>' + (defText ? '<div class="ten-god-def">' + defText + '</div>' : '') + (posList ? '<div class="ten-god-subtitle">性格特点</div><div class="ten-god-positive">' + posList + '</div>' : '') + (negList ? '<div class="ten-god-subtitle" style="margin-top:8px">需要注意</div><div class="ten-god-negative">' + negList + '</div>' : '') + (relText ? '<div class="ten-god-subtitle" style="margin-top:8px">感情模式</div><div class="ten-god-positive">' + relText + '</div>' : '') + '</div>';
+                tgHtml += '<div class="ten-god-cell"><div class="ten-god-pillar">' + tgMap[p] + '</div><div class="ten-god-name">' + god + '</div></div>';
             });
-            document.getElementById("tenGodDetailSection").innerHTML = tgHtml;
+            d("tenGodGrid").innerHTML = tgHtml;
+
+            // 十神详情
+            var tgDetails = charText.ten_god_details || {};
+            var tgDetailsHtml = "";
+            tgPillars.forEach(function(p) {
+                var detail = tgDetails[p] || {};
+                var pos = (detail.positive || []).join("、");
+                var neg = (detail.negative || []).join("、");
+                var rel = detail.relationship || "";
+                var def = detail.definition || "";
+                tgDetailsHtml += '<div style="margin-top:14px;padding:14px;background:var(--paper);border-radius:var(--radius);border-left:3px solid var(--bamboo)">' +
+                    '<div style="font-size:13px;font-weight:700;color:var(--bamboo);margin-bottom:6px">' + tgMap[p] + ' · ' + (tgNames[p]||"其他") + '</div>' +
+                    (def ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">' + def + '</div>' : '') +
+                    (pos ? '<div style="font-size:12px;color:var(--text-light)">特点：' + pos + '</div>' : '') +
+                    (neg ? '<div style="font-size:12px;color:var(--text-light);margin-top:4px">注意：' + neg + '</div>' : '') +
+                    (rel ? '<div style="font-size:12px;color:var(--bamboo);margin-top:4px">感情：' + rel + '</div>' : '') +
+                    '</div>';
+            });
+            d("tenGodDetails").innerHTML = tgDetailsHtml;
 
             // 优劣势
             var sw = charText.strengths_weaknesses || {};
-            var strengths = sw.strengths || [];
-            var weaknesses = sw.weaknesses || [];
-            var swHtml = '<div class="sw-box sw-strength"><div class="sw-title">优势</div><div class="sw-tags">' + 
-                strengths.map(function(s) { return '<span class="sw-tag">' + s + '</span>'; }).join('') + 
-                '</div></div><div class="sw-box sw-weakness"><div class="sw-title">劣势</div><div class="sw-tags">' + 
-                weaknesses.map(function(w) { return '<span class="sw-tag">' + w + '</span>'; }).join('') + '</div></div>';
-            document.getElementById("strengthWeakness").innerHTML = swHtml;
+            var posTags = (sw.strengths || []).map(function(s) { return '<span class="sw-tag">' + s + '</span>'; }).join("");
+            var negTags = (sw.weaknesses || []).map(function(w) { return '<span class="sw-tag">' + w + '</span>'; }).join("");
+            d("swGrid").innerHTML = '<div class="sw-box positive"><div class="sw-title">优势</div><div class="sw-tags">' + posTags + '</div></div>' +
+                '<div class="sw-box negative"><div class="sw-title">劣势</div><div class="sw-tags">' + negTags + '</div></div>';
 
-            // 情感模式
-            var emotional = charText.emotional || "";
-            document.getElementById("emotionalSection").innerHTML = emotional || "情感模式平稳。";
-
-            // 社交人际
-            var social = charText.social || "";
-            document.getElementById("socialSection").innerHTML = social || "人际关系和谐。";
-
-            // 事业发展
+            // 情感社交事业
+            d("emotionalSection").innerHTML = charText.emotional || "情感模式平稳。";
+            d("socialSection").innerHTML = charText.social || "人际关系和谐。";
             var wuxingDetail = (analysis.wuxing || {}).detail || {};
-            var careerTendency = (charText.career || {}).tendency || wuxingDetail.career || "职业发展平稳。";
-            document.getElementById("careerSection").innerHTML = careerTendency;
+            d("careerSection").innerHTML = wuxingDetail.career || "事业发展平稳。";
 
-            // 健康提醒
+            // 健康
             var healthParts = wuxingDetail.health || [];
             if (healthParts.length > 0) {
-                document.getElementById("healthSection").innerHTML = '<div class="health-grid"><div class="health-item"><div class="health-label">重点关注</div><div class="health-value">' + healthParts[0] + '</div></div><div class="health-item"><div class="health-label">次要注意</div><div class="health-value">' + (healthParts[1] || healthParts[0]) + '</div></div></div>';
+                d("healthGrid").innerHTML = '<div class="health-cell"><div class="health-label">重点关注</div><div class="health-value">' + healthParts[0] + '</div></div>' +
+                    '<div class="health-cell"><div class="health-label">次要注意</div><div class="health-value">' + (healthParts[1] || healthParts[0]) + '</div></div>';
             } else {
-                document.getElementById("healthSection").innerHTML = '<div class="analysis-text">健康状态平稳，注意保持良好生活习惯。</div>';
+                d("healthGrid").innerHTML = '<div class="health-cell" style="grid-column:1/-1"><div class="health-label">总体</div><div class="health-value">健康平稳，注意良好生活习惯</div></div>';
             }
 
-            // 大运时间线（带文字解读）- 只显示近20年的大运
-            var dayunList = data.bazi_data.dayun.dayun_list;
+            // 大运时间线
+            var nowYear = new Date().getFullYear();
             var dayunInterps = (analysis.dayun_interpretations || []).reduce(function(acc, item) {
                 acc[item.ganzhi] = item; return acc;
             }, {});
-            var nowYear = new Date().getFullYear();
-            // Filter: only show dayuns within ±10 years of current year
-            var nearbyDayuns = dayunList.filter(function(d) {
+            var nearby = dayun.dayun_list.filter(function(d) {
                 if (d.gan_zhi === "小运") return false;
-                var yrRange = d.year_range || "";
-                var parts = yrRange.split("-");
+                var r = d.year_range || "";
+                var parts = r.split("-");
                 if (parts.length < 2) return false;
-                var startYr = parseInt(parts[0]);
-                var endYr = parseInt(parts[1]);
-                return endYr >= nowYear - 10 && startYr <= nowYear + 10;
+                return parseInt(parts[1]) >= nowYear - 10 && parseInt(parts[0]) <= nowYear + 10;
             });
             var timelineHtml = "";
-            nearbyDayuns.forEach(function(d, idx) {
-                var gz = d.gan_zhi;
-                var gan = gz.charAt(0);
-                var gzWX = WL[getWuXing(gan)];
+            nearby.forEach(function(d, idx) {
+                var gan = d.gan_zhi.charAt(0);
+                var wx = getWx(gan);
                 var isCurrent = d.year_range && d.year_range.indexOf(String(nowYear)) >= 0;
-                var hasLine = idx < nearbyDayuns.length - 1;
-                var interp = dayunInterps[gz] || {};
+                var interp = dayunInterps[d.gan_zhi] || {};
                 var desc = interp.description || "";
-                timelineHtml += '<div class="dayun-card"><div class="dayun-age-col"><div class="dayun-age-label">' + d.age_range + '</div><div class="dayun-age-value">' + d.age_range_xu + '</div></div><div class="dayun-line-col"><div class="dayun-dot"></div>' + (hasLine ? '<div class="dayun-line"></div>' : '') + '</div><div class="dayun-content-col' + (isCurrent ? ' dayun-current' : '') + '"><div class="dayun-gz">' + gan + ' ' + d.gan_zhi.charAt(1) + '</div><div class="dayun-wuxing">' + gzWX + ' · 大运</div><div class="dayun-range">' + d.year_range + '</div>' + (desc ? '<div class="dayun-desc">' + desc + '</div>' : '') + '</div></div>';
+                timelineHtml += '<div class="dayun-item"><div class="dayun-age"><div class="dayun-age-num">' + d.age_range + '</div><div class="dayun-age-xu">' + d.age_range_xu + '</div></div>' +
+                    '<div class="dayun-axis"><div class="dayun-dot' + (isCurrent ? ' active' : '') + '"></div>' + (idx < nearby.length - 1 ? '<div class="dayun-line"></div>' : '') + '</div>' +
+                    '<div class="dayun-content' + (isCurrent ? ' current' : '') + '"><div class="dayun-gz">' + d.gan_zhi + '</div>' +
+                    '<div class="dayun-wx">' + wx + '</div><div class="dayun-range">' + d.year_range + '</div>' +
+                    (desc ? '<div class="dayun-desc">' + desc + '</div>' : '') + '</div></div>';
             });
-            if (nearbyDayuns.length === 0) {
-                timelineHtml = '<div style="text-align:center;color:var(--text-muted);padding:20px;">大运数据加载中...</div>';
-            }
-            document.getElementById("dayunTimeline").innerHTML = timelineHtml;
+            d("dayunList").innerHTML = timelineHtml;
 
-            // 流年（近5年）
+            // 流年
             var liunianData = [];
-            dayunList.forEach(function(d) {
-                if (d.liu_nian) liunianData = liunianData.concat(d.liu_nian);
-            });
+            dayun.dayun_list.forEach(function(d) { if (d.liu_nian) liunianData = liunianData.concat(d.liu_nian); });
             liunianData = liunianData.filter(function(y) {
                 var yr = parseInt(y.year);
                 return yr >= nowYear - 2 && yr <= nowYear + 2;
             }).slice(0, 5);
-            var liunianHtml = '<div class="liunian-grid">';
+            var liunianHtml = "";
             liunianData.forEach(function(y) {
-                liunianHtml += '<div class="liunian-item"><div class="liunian-year">' + y.year + '年</div><div class="liunian-gz" style="color:var(--text-secondary)">' + y.gan_zhi + '</div><div class="liunian-age">' + y.age_xu + '岁</div></div>';
+                liunianHtml += '<div class="liunian-cell"><div class="liunian-year">' + y.year + '年</div><div class="liunian-gz">' + y.gan_zhi + '</div><div class="liunian-age">' + y.age_xu + '岁</div></div>';
             });
-            liunianHtml += '</div>';
-            document.getElementById("liunianList").innerHTML = liunianHtml;
+            d("liunianGrid").innerHTML = liunianHtml;
 
-            // 显示结果
-            document.getElementById("resultSection").classList.add("show");
-            document.getElementById("inputForm").style.display = "none";
+            d("inputForm").style.display = "none";
+            d("resultSection").classList.add("show");
         }
 
         function resetForm() {
-            document.getElementById("resultSection").classList.remove("show");
-            document.getElementById("inputForm").style.display = "block";
-            document.getElementById("errorMsg").classList.remove("show");
+            d("resultSection").classList.remove("show");
+            d("inputForm").style.display = "block";
+            d("errorMsg").classList.remove("show");
         }
 
         function showError(msg) {
-            const el = document.getElementById("errorMsg");
+            var el = d("errorMsg");
             el.textContent = msg;
             el.classList.add("show");
         }
 
-        function hideError() {
-            document.getElementById("errorMsg").classList.remove("show");
-        }
+        function hideError() { d("errorMsg").classList.remove("show"); }
 
-        function showLoading(show) {
-            document.getElementById("loading").classList.toggle("show", show);
-        }
+        function showLoading(show) { d("loading").classList.toggle("show", show); }
+
+        function d(id) { return document.getElementById(id); }
     </script>
 </body>
 </html>
