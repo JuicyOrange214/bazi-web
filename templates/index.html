@@ -39,6 +39,7 @@
             color: var(--text);
             line-height: 1.8;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* ── 背景纹理 ── */
@@ -154,6 +155,8 @@
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
             font-family: inherit;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .form-group input:focus,
@@ -747,9 +750,9 @@
 
         /* ── 响应式 ── */
         @media (max-width: 640px) {
-            .container { padding: 32px 16px; }
-            .card { padding: 24px 20px; }
-            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 24px 12px; }
+            .card { padding: 20px 16px; }
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
             .bazi-grid { grid-template-columns: repeat(2, 1fr); }
             .info-row { grid-template-columns: repeat(2, 1fr); }
             .ten-god-grid { grid-template-columns: repeat(2, 1fr); }
@@ -757,7 +760,8 @@
             .gods-row { flex-direction: column; }
             .sw-grid { grid-template-columns: 1fr; }
             .dayun-age { width: 56px; }
-            .form-row { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; gap: 12px; }
+            .btn-primary { width: 100%; }
         }
 
         /* ── 隐藏逻辑 ── */
