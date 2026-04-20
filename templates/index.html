@@ -252,9 +252,9 @@
         }
 
         .wx-木 { background: #E8F0E3; color: #4A7040; }
-        .wx-火 { background: #FBEPE8; color: #A04030; }
+        .wx-火 { background: #FCE8D8; color: #A05030; }
         .wx-土 { background: #EDE5D8; color: #6B5030; }
-        .wx-金 { background: #EDE9E3; color: #605040; }
+        .wx-金 { background: #E8E3D0; color: #8B7030; }
         .wx-水 { background: #E3EEF4; color: #3D6070; }
 
         /* ── 命理信息 ── */
@@ -1105,15 +1105,42 @@
             function joinList(arr) {
                 return (arr || []).map(cleanPunc).filter(Boolean).join("、");
             }
+            // 柱位语境：同一十神在不同柱位有不同的侧重点
+            var pillarContext = {
+                year: "（年柱视角：祖辈积累与早期环境对命主的影响）",
+                month: "（月柱视角：原生家庭、同辈环境与早年成长经历）",
+                day: "（日柱视角：自我认知、配偶关系与人生核心课题）",
+                hour: "（时柱视角：晚年归宿、子女缘分与外在表现）"
+            };
+            // 同一十神在不同柱位时的解读差异（追加描述）
+            var sameGodContext = {
+                "month-day": {
+                    "比肩": "月柱比肩代表早年环境中的独立自主；日柱比肩则揭示命主一生核心的自我力量与伙伴关系模式。两者同现，命主独立性极强，擅长独当一面，但也需学会借力他人。",
+                },
+                "year-month": {
+                    "正印": "年柱正印得祖辈福荫，月柱正印则代表学业顺利、贵人扶持。两者同现，学业运佳，易得长辈相助，适合学术、教育类发展。",
+                }
+            };
             tgPillars.forEach(function(p) {
                 var detail = tgDetails[p] || {};
+                var god = tgNames[p] || "其他";
                 var pos = joinList(detail.positive);
                 var neg = joinList(detail.negative);
                 var rel = detail.relationship || "";
                 var def = detail.definition || "";
+                // 追加柱位专属解读（当月柱+日柱同十神时）
+                var extraNote = "";
+                var p2 = p === "month" ? "day" : (p === "day" ? "month" : null);
+                if (p2 && tgNames[p2] === god) {
+                    var key = p + "-" + p2;
+                    if (sameGodContext[key] && sameGodContext[key][god]) {
+                        extraNote = sameGodContext[key][god];
+                    }
+                }
                 tgDetailsHtml += '<div style="margin-top:14px;padding:14px;background:var(--paper);border-radius:var(--radius);border-left:3px solid var(--bamboo)">' +
-                    '<div style="font-size:13px;font-weight:700;color:var(--bamboo);margin-bottom:6px">' + tgMap[p] + ' · ' + (tgNames[p]||"其他") + '</div>' +
+                    '<div style="font-size:13px;font-weight:700;color:var(--bamboo);margin-bottom:6px">' + tgMap[p] + ' · ' + god + ' ' + pillarContext[p] + '</div>' +
                     (def ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">' + def + '</div>' : '') +
+                    (extraNote ? '<div style="font-size:12px;color:var(--wood);margin-bottom:6px;font-style:italic">' + extraNote + '</div>' : '') +
                     (pos ? '<div style="font-size:12px;color:var(--text-light)">特点：' + pos + '</div>' : '') +
                     (neg ? '<div style="font-size:12px;color:var(--text-light);margin-top:4px">注意：' + neg + '</div>' : '') +
                     (rel ? '<div style="font-size:12px;color:var(--bamboo);margin-top:4px">感情：' + rel + '</div>' : '') +
